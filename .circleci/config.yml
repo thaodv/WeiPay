@@ -1,4 +1,18 @@
 version: 2
+
+workflows:
+  version: 2
+  android-ios-beta:
+    jobs:
+      -beta-ios:
+        filters:
+          branches:
+            only: staging
+      -alpha-android:
+        filters:
+          branches:
+            only: staging
+
 jobs:
   beta-ios:
     build:
@@ -51,16 +65,3 @@ jobs:
             path: output
         - store_test_results:
             path: output/scan
-
-workflows:
-  version: 2
-  android-ios-beta:
-    jobs:
-      -beta-ios:
-        filters:
-          branches:
-            only: staging
-      -alpha-android:
-        filters:
-          branches:
-            only: staging
