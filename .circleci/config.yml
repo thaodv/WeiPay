@@ -46,7 +46,7 @@ jobs:
   #     - store_artifacts:
   #         path: test-results
 
-  beta-ios:
+  ios:
     build:
       macos:
         xcode: "9.4.1"
