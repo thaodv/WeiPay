@@ -100,11 +100,11 @@ jobs:
 #             path: output/scan
 #       parallelism: 4
 # #
- workflows:
-   version: 2
-   android-ios-beta:
-     jobs:
-       - build
+workflows:
+ version: 2
+ android-ios-beta:
+   jobs:
+     - build
 
 #       -alpha-android:
 #         filters:
