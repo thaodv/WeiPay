@@ -66,6 +66,7 @@
 		B5EC2C02E3AC4C99BE9D97EE /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C11B53B3FA4547468491BC8A /* Zocial.ttf */; };
 		BC3D0DA8FD32458288DF67D0 /* WorkSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 85806980C65A4E39A3F2EF7B /* WorkSans-Bold.ttf */; };
 		C8988E202BDA4E69811198DC /* Cairo-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DFFCF974EF40409391292441 /* Cairo-ExtraLight.ttf */; };
+		CA3ED25E215420ED00467845 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB61A68108700A75B9A /* Info.plist */; };
 		CCAAAF2308E849F2A41376E4 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FEAAFFBEACCB4A7CAB2AF738 /* SimpleLineIcons.ttf */; };
 		D7DCF6A8A1C04D2487E374CA /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1FE49ACEF6634EF5937B3D2C /* EvilIcons.ttf */; };
 		DFD374ABD8AE4C67986E9372 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A87AA81A7A4A4DB5A3327359 /* libBVLinearGradient.a */; };
@@ -1352,6 +1353,7 @@
 				AF217818333B45FDA3DA6B63 /* Feather.ttf in Resources */,
 				4153FBB770D94EA983EAE84F /* FontAwesome.ttf in Resources */,
 				8BF8CE22D08B4F939F4B34AE /* Foundation.ttf in Resources */,
+				CA3ED25E215420ED00467845 /* Info.plist in Resources */,
 				6417ABE05CA54B0AA7715E9B /* Ionicons.ttf in Resources */,
 				E3B0BAB4D5824D8ABE95F982 /* MaterialCommunityIcons.ttf in Resources */,
 				1D95075E412F4F249EE2C9EB /* MaterialIcons.ttf in Resources */,
