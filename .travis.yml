@@ -6,4 +6,4 @@ before_install:
 install:
   - sudo gem install fastlane --no-ri --no-rdoc --silent
 script:
-  - fastlane ios slack_testflight
+  - fastlane ios beta
