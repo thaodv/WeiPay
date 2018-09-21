@@ -7,6 +7,7 @@ before_script:
 - echo -e "machine github.com\n  login $GITHUB_ACCESS_TOKEN" >> ~/.netrc
 - echo -e "ssh -T git@github.com" >> ~/.sshTestConnection
 install:
+  - sudo rvm use 2.5.1
   - sudo gem install fastlane --no-ri --no-rdoc --silent
 script:
   - fastlane ios beta
