@@ -3,4 +3,4 @@ osx_image: xcode9.4
 install:
   - sudo gem install fastlane --no-ri --no-rdoc --silent
 script:
-  - fastlane ios beta
+  - fastlane ios slack_testflight
