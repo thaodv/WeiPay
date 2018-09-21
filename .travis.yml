@@ -6,8 +6,8 @@ before_script:
 # This command will provide travis machines with github access
 - echo -e "machine github.com\n  login $GITHUB_ACCESS_TOKEN" >> ~/.netrc
 - echo -e "ssh -T git@github.com" >> ~/.sshTestConnection
+- rvm use 2.5.1
 install:
-  - sudo rvm use 2.5.1
-  - sudo gem install fastlane --no-ri --no-rdoc --silent
+  - sudo gem install fastlane --no-ri --no-rdoc -q
 script:
   - fastlane ios beta
