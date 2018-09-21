@@ -2,11 +2,12 @@ language: objective-c
 osx_image: xcode9.4
 addons:
   ssh_known_hosts: git.example.com
+rvm:
+  - 2.5.1
 before_script:
 # This command will provide travis machines with github access
 - echo -e "machine github.com\n  login $GITHUB_ACCESS_TOKEN" >> ~/.netrc
 - echo -e "ssh -T git@github.com" >> ~/.sshTestConnection
-- rvm use 2.5.1
 install:
   - sudo gem install fastlane --no-ri --no-rdoc -q
 script:
