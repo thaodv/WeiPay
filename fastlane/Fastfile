@@ -28,14 +28,13 @@ platform :ios do
 
   desc 'Fetch certificates and provisioning profiles'
     lane :certificates do
-      match(app_identifier: 'io.chainsafe.weipay', type: 'development', readonly: true)
-      match(app_identifier: 'io.chainsafe.weipay', type: 'appstore', readonly: true)
+      match(app_identifier: 'io.chainsafe.weipay', type: 'development', readonly: true, clone_branch_directly: true)
+      match(app_identifier: 'io.chainsafe.weipay', type: 'appstore', readonly: true, clone_branch_directly: true)
     end
 
   desc 'Build the iOS application.'
     private_lane :build do
       certificates
-      increment_build_number(xcodeproj: "./ios/weipay.xcodeproj")
       gym(scheme: 'WeiPay', project: './ios/weipay.xcodeproj')
     end
 

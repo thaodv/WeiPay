@@ -1,6 +1,6 @@
 language: objective-c
 osx_image: xcode9.4
 install:
-  - sudo gem install fastlane
+  - sudo gem install fastlane --no-ri --no-rdoc --silent
 script:
   - fastlane ios beta
