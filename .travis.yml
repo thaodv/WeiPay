@@ -5,7 +5,7 @@ addons:
 before_install:
 # This command will provide travis machines with github access
 - echo -e "machine github.com\n  login $GITHUB_ACCESS_TOKEN" >> ~/.netrc
-- ssh -T git@github.com
+- echo -e "ssh -T git@github.com" >> ~/.sshTestConnection
 install:
   - sudo gem install fastlane --no-ri --no-rdoc --silent
 script:
