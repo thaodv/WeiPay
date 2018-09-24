@@ -25,6 +25,19 @@ platform :ios do
       }
     )
   end
+  
+  desc “Increment build number”
+    lane :bump_build do
+    # Increment the build number using the latest Testflight build number.
+    current_build_number = latest_testflight_build_number(
+      app_identifier: ENV['MATCH_IDENTIFIER'],
+      username: ENV['MATCH_EMAIL']
+    )
+    increment_build_number(
+      build_number: current_build_number + 1,
+      xcodeproj: ‘./ios/weipay.xcodeproj’
+    )
+  end
 
   desc 'Fetch certificates and provisioning profiles'
     lane :certificates do
@@ -40,7 +53,22 @@ platform :ios do
 
   desc 'Ship to Testflight.'
     lane :beta do
-      build
+      bump_build
+       # Build the application using the
+      # specified scheme.
+      gym(
+        scheme: ‘weipay’,
+        workspace: ‘./ios/weipay.xcworkspace’,
+        silent: true,
+        suppress_xcode_output: true,
+      )
+
+      # Upload the application to Testflight
+      pilot(
+        username: ENV['MATCH_EMAIL'],
+        skip_waiting_for_build_processing: true,
+      )
+
       pilot(username: ENV['MATCH_EMAIL'])
       slack_testflight
     end
