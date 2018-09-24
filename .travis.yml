@@ -4,6 +4,8 @@ addons:
   ssh_known_hosts: git.example.com
 rvm:
   - 2.5.0
+node:
+  - 8.12.0
 install:
   - sudo gem install fastlane --no-ri --no-rdoc -q
   - npm install

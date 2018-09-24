@@ -28,17 +28,6 @@ platform :ios do
 
   desc 'Fetch certificates and provisioning profiles'
     lane :certificates do
-      # Create a temporary keychain to
-      # store the certificates.
-      create_keychain(
-        name: ENV["MATCH_KEYCHAIN_NAME"],
-        password: ENV["MATCH_PASSWORD"],
-        default_keychain: true,
-        unlock: true,
-        timeout: 3600,
-        add_to_search_list: true
-      )
-      
       match(app_identifier: ENV['MATCH_IDENTIFIER'], type: 'development', readonly: true, clone_branch_directly: true)
       match(app_identifier: ENV['MATCH_IDENTIFIER'], type: 'appstore', readonly: true, clone_branch_directly: true)
     end
