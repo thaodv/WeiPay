@@ -4,9 +4,8 @@ addons:
   ssh_known_hosts: git.example.com
 rvm:
   - 2.5.0
-before_script:
-  - sudo npm i
 install:
   - sudo gem install fastlane --no-ri --no-rdoc -q
+  - npm install
 script:
   - fastlane ios beta
