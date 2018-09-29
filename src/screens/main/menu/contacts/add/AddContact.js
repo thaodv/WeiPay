@@ -45,7 +45,6 @@ class AddContact extends Component {
       tokenName.label = token.name;
       tokenName.img = token.logo.src;
       tokens.push(tokenName);
-      //console.log('tokenName', tokenName);
     });
 
     this.state = {
@@ -112,21 +111,37 @@ class AddContact extends Component {
     this.setState({ tokenName: 'null' });
   }
 
+  /**
+   * Tokens already are saved globally, this just resets the picker value
+   */
   addAnotherCoinAddress() {
+
+    //old
     this.setState({ tokenName: 'null' });
     this.setState({ contactAddressInput: '' });
   }
 
   /**
-   * Get all the tokens the user has selected for this contact, pass that array to the action creator.
-   * Pass in the new token and reset the state to current list of tokens for this new contact.
+   * By default, tempContactTokens = []
+   * If you have added multiple tokens, you can push your new token as well
+   * If you have not added any, you just push a new token to an empty array.
+   * 
+   * Null is returned sometimes - bug - hack fix is loop through and remove null
    */
   selectedToken = async (token) => {
+    let arrayWithoutNullValues = [];
+   
     let previouslySavedTokens = this.props.tempContactTokens;
-    previouslySavedTokens.push(token);
-    console.log(token);
-    
-    this.props.updateTempWalletContacts(previouslySavedTokens, token);
+
+    for (let i = 0; i < previouslySavedTokens.length; i++) {
+      console.log(previouslySavedTokens[i]);
+      if(previouslySavedTokens[i] !== null) {
+        arrayWithoutNullValues.push(previouslySavedTokens[i]);
+      }
+    }
+
+    arrayWithoutNullValues.push(token);    
+    this.props.updateTempWalletContacts(arrayWithoutNullValues);
     //old
     await this.setState({
       tokenName: token,
@@ -170,7 +185,6 @@ class AddContact extends Component {
                   value={this.props.tempContactName}
                 />
               </View>
-
               <View style={styles.inputAddressContainer}>
                 <FormInput
                   placeholder={'Ethereum Address'}
@@ -191,15 +205,15 @@ class AddContact extends Component {
               <View style={styles.pickerContainer}>
                 <RNPickerSelect
                   placeholder={{
-                    label: 'Coin Type',
+                    label: 'Select Token',
                     value: null,
                   }}
                   items={this.state.tokens}
                   onValueChange={(value) => {
                     this.selectedToken(value);
                   }}
-                  style={pickerStyle}
-                  value={this.state.tokenName}
+                  style={ pickerStyle }
+                  value={ this.state.tokenName }
                   ref={(el) => {
                     this.inputRefs.picker = el;
                   }}
@@ -209,7 +223,7 @@ class AddContact extends Component {
                 style={styles.addAnotherText}
                 onPress={this.addAnotherCoinAddress.bind(this)}
                 disabled={!this.state.tokenName}>
-                  <Text style={styles.anotherText}> +  Add Another Coin </Text>
+                  <Text style={styles.anotherText}> +  Add Coin </Text>
               </TouchableOpacity>
             </BoxShadowCard>
           </View>
