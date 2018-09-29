@@ -1,6 +1,6 @@
 import {
   DEBUG_MODE,
-} from '../../actions/ActionTypes';
+} from '../../actions/actionTypes/AppConfigTypes';
 
 const INITIAL_STATE = {
   debugMode: false,

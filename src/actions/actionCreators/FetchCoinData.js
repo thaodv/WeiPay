@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { apiBaseUrl, apiCurrencyResponseUrl, apiMultipleCurrencyBaseUrl, apiMulitpleResponseUrl } from '../constants/Api';
+import { apiBaseUrl, apiCurrencyResponseUrl, apiMultipleCurrencyBaseUrl, apiMulitpleResponseUrl } from '../../constants/Api';
 
 import {
   FETCHING_COIN_DATA,

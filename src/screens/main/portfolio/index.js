@@ -6,7 +6,8 @@ import { connect } from 'react-redux';
 import RF from 'react-native-responsive-fontsize';
 import { NavigationActions } from 'react-navigation';
 import LinearButton from '../../../components/LinearGradient/LinearButton';
-import { setWalletTokenBalances, fetchCoinData, calculateWalletBalance } from '../../../actions/FetchCoinData';
+
+import { setWalletTokenBalances, fetchCoinData, calculateWalletBalance } from '../../../actions/actionCreators/FetchCoinData';
 import processAllTokenBalances from '../../../scripts/tokenBalances';
 import BackWithMenuNav from '../../../components/customPageNavs/BackWithMenuNav';
 import BoxShadowCard from '../../../components/ShadowCards/BoxShadowCard';

@@ -1,7 +1,4 @@
 import {
-  INITIALIZE_APP_TOKEN_SETUP,
-  TEMP_WALLET_NAME,
-  INITIALIZE_NEW_APP_WALLET,
   FETCHING_COIN_DATA,
   FETCHING_COIN_DATA_SUCCESS,
   FETCHING_COIN_DATA_FAIL,
@@ -10,7 +7,13 @@ import {
   FETCHING_ETH_PRICE_DATA_FAIL,
   SET_WALLET_TOKENS_BALANCES,
   CALCULATE_WALLET_BALANCE,
-} from '../../actions/ActionTypes';
+} from '../../actions/actionTypes/FetchCoinDataTypes';
+
+import {
+  INITIALIZE_APP_TOKEN_SETUP,
+  TEMP_WALLET_NAME,
+  INITIALIZE_NEW_APP_WALLET,
+} from '../../actions/actionTypes/AppConfigTypes';
 
 const initialState = {
   wallets: [],

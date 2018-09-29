@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Alert, Dimensions, Keyboard, TouchableWithoutFe
 import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 import { FormInput } from 'react-native-elements';
-import { initializeAppWallet } from '../../../actions/AppConfig';
+import { initializeAppWallet } from '../../../actions/actionCreators/AppConfig';
 import provider from '../../../constants/Providers';
 import LinearButton from '../../../components/LinearGradient/LinearButton';
 import BackWithMenuNav from '../../../components/customPageNavs/BackWithMenuNav';
