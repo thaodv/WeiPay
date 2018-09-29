@@ -28,3 +28,19 @@ export function setContactTabState(tabText) {
       dispatch({ type: SET_CONTACT_ETHEREUM_ADDRESS, payload: address });
     };
   }
+
+  export function updateTempWalletContacts(oldContacts, newContact) {
+    // let tempContacts;
+    // if (oldContacts.length > 0) {
+    //     tempContacts.push(newContact)
+    //     console.log('length is actually greater than 0');
+    //     console.log('old contacts', oldContacts);
+    // } else {
+    //     tempContacts = [];
+    //     tempContacts.push(newContact);
+    // }
+    // console.log('temp contact is ...', tempContacts);
+    return (dispatch) => {
+      dispatch({ type: UPDATE_WALLET_CONTACTS, payload: oldContacts });
+    }
+  }

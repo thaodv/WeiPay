@@ -11,7 +11,9 @@ import * as actions from '../../../../../actions/ActionCreator';
 import LinearButton from '../../../../../components/LinearGradient/LinearButton';
 import ClearButton from '../../../../../components/LinearGradient/ClearButton';
 import BoxShadowCard from '../../../../../components/ShadowCards/BoxShadowCard';
-import { setContactTempName, setContactTabState, setContactEthereumAddress } from '../../../../../actions/actionCreators/Contacts';
+import { 
+  setContactTempName, setContactTabState, setContactEthereumAddress, updateTempWalletContacts,
+} from '../../../../../actions/actionCreators/Contacts';
 
 
 /**
@@ -43,7 +45,7 @@ class AddContact extends Component {
       tokenName.label = token.name;
       tokenName.img = token.logo.src;
       tokens.push(tokenName);
-      console.log('tokenName', tokenName);
+      //console.log('tokenName', tokenName);
     });
 
     this.state = {
@@ -115,22 +117,25 @@ class AddContact extends Component {
     this.setState({ contactAddressInput: '' });
   }
 
-  getTokenIMG = async (token) => {
-    let url;
+  /**
+   * Get all the tokens the user has selected for this contact, pass that array to the action creator.
+   * Pass in the new token and reset the state to current list of tokens for this new contact.
+   */
+  selectedToken = async (token) => {
+    let previouslySavedTokens = this.props.tempContactTokens;
+    previouslySavedTokens.push(token);
+    console.log(token);
+    
+    this.props.updateTempWalletContacts(previouslySavedTokens, token);
+    //old
     await this.setState({
       tokenName: token,
     });
-    for (let i = 0; i < this.state.tokens.length; i += 1) {
-      if (token === this.state.tokens[i].value) {
-        url = this.state.tokens[i].img;
-      }
-    }
-    this.setState({ tokenIMG: url });
   }
 
   renderName(name) {
     this.props.setContactTempName(name);
-    this.setState({contactName: name})
+    this.setState({contactName: name}) //old
   }
 
   renderAddress(address) {
@@ -145,13 +150,7 @@ class AddContact extends Component {
     this.setState({ tokenImages: copyIMG });
   }
 
-
-
-  /**
-   * Returns the form required to add a contact
-   */
   render() {
-
     return (
       <SafeAreaView style={styles.safeAreaView}>
         <View style={styles.mainContainer}>
@@ -177,12 +176,10 @@ class AddContact extends Component {
                   placeholder={'Ethereum Address'}
                   onChangeText={ (address) => { return this.renderAddress(address)}}
                   inputStyle={styles.inputAddressText}
-                  placeholderTextColor={'#b3b3b3'}
-                  // value={this.state.contactAddress[this.state.tokenName]}
-                  value={this.props.tempContactAddress}                 
+                  placeholderTextColor={'#b3b3b3'}                
+                  value={ this.props.tempContactAddress }                 
                 />
               </View>
-
               <View style={styles.barcodeContainer}>
                 <TouchableOpacity onPress={() => { return this.navigate(); }}>
                   <Image
@@ -199,7 +196,7 @@ class AddContact extends Component {
                   }}
                   items={this.state.tokens}
                   onValueChange={(value) => {
-                    this.getTokenIMG(value);
+                    this.selectedToken(value);
                   }}
                   style={pickerStyle}
                   value={this.state.tokenName}
@@ -207,7 +204,7 @@ class AddContact extends Component {
                     this.inputRefs.picker = el;
                   }}
                 />
-              </View>           
+              </View>
               <TouchableOpacity
                 style={styles.addAnotherText}
                 onPress={this.addAnotherCoinAddress.bind(this)}
@@ -401,12 +398,14 @@ const pickerStyle = {
 
 const mapStateToProps = ({ contacts, Wallet }) => {
 
-  const { tempContactName, tokens, tempContactAddress } = Wallet;
+  const { 
+    tempContactName, tokens, tempContactAddress, tempContactTokens, 
+  } = Wallet;
   return {
-    tokens, tempContactName, tempContactAddress, currentContact: contacts.incompleteContactInputs,
+    tokens, tempContactName, tempContactAddress, tempContactTokens, currentContact: contacts.incompleteContactInputs,
   };
 };
 
 export default connect(mapStateToProps, {
-  actions, setContactTempName, setContactTabState, setContactEthereumAddress
+  actions, setContactTempName, setContactTabState, setContactEthereumAddress, updateTempWalletContacts,
 })(AddContact);

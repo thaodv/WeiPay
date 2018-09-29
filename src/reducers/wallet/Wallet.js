@@ -18,6 +18,7 @@ import {
 import {
   SET_TEMP_CONTACT_NAME,
   SET_CONTACT_ETHEREUM_ADDRESS,
+  UPDATE_WALLET_CONTACTS,
 } from '../../actions/actionTypes/ContactTypes';
 
 
@@ -94,11 +95,15 @@ export default function (state = initialState, action) {
     case SET_TEMP_CONTACT_NAME:
       return {
         ...state, tempContactName: action.payload,
-      }
+      };
     case SET_CONTACT_ETHEREUM_ADDRESS:
-    return {
-      ...state, tempContactAddress: action.payload,
-     }
+      return {
+        ...state, tempContactAddress: action.payload,
+      };
+    case UPDATE_WALLET_CONTACTS:
+      return {
+        ...state, tempContactTokens: action.payload,
+      };
     default:
       return state;
   }
