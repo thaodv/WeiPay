@@ -13,7 +13,7 @@ import {
 
 export function setContactTabState(tabText) {
     return (dispatch) => {
-      dispatch({ type:   SET_ACTIVE_CONTACT_TAB, payload: tabText });
+      dispatch({ type: SET_ACTIVE_CONTACT_TAB, payload: tabText });
     };
   }
 
@@ -29,18 +29,14 @@ export function setContactTabState(tabText) {
     };
   }
 
-  export function updateTempWalletContacts(oldContacts, newContact) {
-    // let tempContacts;
-    // if (oldContacts.length > 0) {
-    //     tempContacts.push(newContact)
-    //     console.log('length is actually greater than 0');
-    //     console.log('old contacts', oldContacts);
-    // } else {
-    //     tempContacts = [];
-    //     tempContacts.push(newContact);
-    // }
-    // console.log('temp contact is ...', tempContacts);
+  export function updateTempWalletContacts(oldContacts) {
     return (dispatch) => {
       dispatch({ type: UPDATE_WALLET_CONTACTS, payload: oldContacts });
+    }
+  }
+
+  export function saveWalletContacts(updatedContacts) {
+    return (dispatch) => {
+      dispatch({ type: INITIALIZE_WALLET_CONTACTS, payload: updatedContacts });
     }
   }
