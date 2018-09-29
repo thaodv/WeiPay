@@ -20,6 +20,7 @@ import {
   SET_CONTACT_ETHEREUM_ADDRESS,
   UPDATE_WALLET_CONTACTS,
   INITIALIZE_WALLET_CONTACTS,
+  RESET_TEMP_CONTACT_STATE,
 } from '../../actions/actionTypes/ContactTypes';
 
 
@@ -108,6 +109,10 @@ export default function (state = initialState, action) {
     case INITIALIZE_WALLET_CONTACTS: 
       return {
         ...state, contacts: action.payload,
+      };
+    case RESET_TEMP_CONTACT_STATE:
+      return {
+        ...state, tempContactName: null, tempContactTokens: [], tempContactAddress: null,
       };
     default:
       return state;

@@ -1,15 +1,21 @@
 import {
+  RESET_TEMP_CONTACT_STATE,
   SET_ACTIVE_CONTACT_TAB,
   UPDATE_WALLET_CONTACTS,
   SET_TEMP_CONTACT_NAME,
   INITIALIZE_WALLET_CONTACTS,
   SET_CONTACT_ETHEREUM_ADDRESS,
-  INITIALIZE_CONTACT_TOKENS,
 } from '../actionTypes/ContactTypes';
 
 import {
   SET_TEMPORARY_QR_ADDRESS,
 } from '../actionTypes/AppConfigTypes';
+
+export function resetTempContactState() {
+    return (dispatch) => {
+      dispatch({ type: RESET_TEMP_CONTACT_STATE, payload: '' });
+    };
+  }
 
 export function setContactTabState(tabText) {
     return (dispatch) => {

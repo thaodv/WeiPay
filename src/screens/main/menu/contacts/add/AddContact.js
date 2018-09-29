@@ -12,7 +12,12 @@ import LinearButton from '../../../../../components/LinearGradient/LinearButton'
 import ClearButton from '../../../../../components/LinearGradient/ClearButton';
 import BoxShadowCard from '../../../../../components/ShadowCards/BoxShadowCard';
 import {
-  setContactTempName, setContactTabState, setContactEthereumAddress, updateTempWalletContacts, saveWalletContacts,
+  setContactTempName,
+  setContactTabState,
+  setContactEthereumAddress,
+  updateTempWalletContacts,
+  saveWalletContacts,
+  resetTempContactState,
 } from '../../../../../actions/actionCreators/Contacts';
 import Contact from '../../../../../scripts/classes/Contact';
 
@@ -95,11 +100,18 @@ class AddContact extends Component {
     oldContactList.push(newContact);
 
     const validContactName = this.checkContactName(oldContactList, currentContactName);
-    if (validContactName) {
+    const validContactAddress = this.checkContactAddress(oldContactList, currentContactName);
+
+    if (validContactName && validContactAddress) {
       this.props.saveWalletContacts(oldContactList);
+      this.props.resetTempContactState();
     } else {
-      console.log('contact name has been added already');
+      console.log('contact is invalid');
     }
+
+
+
+    //clear state
 
     //old
     //this.props.completeContact(currentContactName, currentContactAddress, 'notgood');
@@ -117,6 +129,24 @@ class AddContact extends Component {
     let isValid = true;
     contactList.forEach(contact => {
       if(proposedName == contact.name) {
+        track++;   
+      }
+    });
+    if(track > 1) {
+      return false
+    } 
+    return true;
+  }
+
+  /**
+   * This will check if the address has already been added to another contact.
+   * This will also include the malicious address checks and other validation (future)
+   */
+  checkContactAddress(contactList, proposedAddress) {
+    let track = 0;
+    let isValid = true;
+    contactList.forEach(contact => {
+      if(proposedAddress == contact.address) {
         track++;   
       }
     });
@@ -450,4 +480,5 @@ export default connect(mapStateToProps, {
   setContactEthereumAddress,
   updateTempWalletContacts,
   saveWalletContacts,
+  resetTempContactState
 })(AddContact);
