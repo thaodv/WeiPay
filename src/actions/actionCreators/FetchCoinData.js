@@ -11,7 +11,7 @@ import {
   FETCHING_ETH_PRICE_DATA_FAIL,
   SET_WALLET_TOKENS_BALANCES,
   CALCULATE_WALLET_BALANCE,
-} from "./ActionTypes";
+} from "../actionTypes/FetchCoinDataTypes";
 
 /**
  * Pass in Array of symbol and amount of tokens

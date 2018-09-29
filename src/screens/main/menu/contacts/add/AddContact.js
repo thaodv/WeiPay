@@ -12,22 +12,10 @@ import LinearButton from '../../../../../components/LinearGradient/LinearButton'
 import ClearButton from '../../../../../components/LinearGradient/ClearButton';
 import BoxShadowCard from '../../../../../components/ShadowCards/BoxShadowCard';
 import barcode from '../../../../../assets/icons/barcode.png';
-/**
- * Is a full screen react component
- * This screen is used to add a new contact to the wallet contact list.
- *
- */
+
+
 class AddContact extends Component {
-  /**
-   * Initializes the current token list stored in state as the datasource
-   * for the scrollListView.
-   * Also initializes the local state variable to keep track of the changes made to
-   * the text fields
-   * @param {Object} props
-   */
-
   constructor(props) {
-
     super(props);
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => { return r1 !== r2 ;} });
     const current = this.props.currentContact;
@@ -68,18 +56,6 @@ class AddContact extends Component {
     this.props.tokens.map((token) => { return newcontactAddress[token.title] = '' ;});
     this.setState({ contactAddress: newcontactAddress });
   }
-
-  /**
-   * This Method is used to update the contact name in the global
-   * and local state variable when ever the contactName inputfield changes.
-   * @param {String} name
-   */
-  // renderName(name) {
-  //   this.setState({ contactName: name });
-  //   const contact = { name };
-  //   this.props.addingContact(contact);
-  //   this.props.saveAddContactInputs(this.state.contactName, this.state.contactAddress, this.state.tokenImages);
-  // }
 
   navigate = () => {
     this.props.saveAddContactInputs(this.state.contactName, this.state.contactAddress, this.state.tokenImages);
@@ -171,6 +147,16 @@ class AddContact extends Component {
                   value={this.state.contactName}
                 />
               </View>
+              <View style={styles.inputAddressContainer}>
+                <FormInput
+                  placeholder={'Ethereum Address'}
+                  onChangeText={ (address) => { return this.renderAddress(address) ;}}
+                  inputStyle={styles.inputAddressText}
+                  placeholderTextColor={'#b3b3b3'}
+                  value={this.state.contactAddress[this.state.tokenName]}
+                  editable={!!this.state.tokenName}
+                />
+              </View>
               <View style={styles.barcodeContainer}>
                 <TouchableOpacity onPress={() => { return this.navigate(); }}>
                   <Image
@@ -196,16 +182,7 @@ class AddContact extends Component {
                   }}
                 />
               </View>
-              <View style={styles.inputAddressContainer}>
-                <FormInput
-                  placeholder={'Public Address'}
-                  onChangeText={ (address) => { return this.renderAddress(address) ;}}
-                  inputStyle={styles.inputAddressText}
-                  placeholderTextColor={'#b3b3b3'}
-                  value={this.state.contactAddress[this.state.tokenName]}
-                  editable={!!this.state.tokenName}
-                />
-              </View>
+           
               <TouchableOpacity
                 style={styles.addAnotherText}
                 onPress={this.addAnotherCoinAddress.bind(this)}

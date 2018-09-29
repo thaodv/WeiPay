@@ -3,9 +3,6 @@ import {
  View, Text, StyleSheet, ListView, SafeAreaView, TouchableWithoutFeedback, Dimensions, Keyboard
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
-import {
- Icon, Button, FormLabel, FormInput, FormValidationMessage, List, ListItem
-} from 'react-native-elements';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import RF from "react-native-responsive-fontsize"
@@ -35,7 +32,7 @@ class Contacts extends Component {
     if (this.state.tab === 'contacts') {
       return (
         <ContactsTab
-          setAddContactTab={() => {return this.setState({ tab: 'addcontact' })}}
+          setAddContactTab={() => { return this.setState({ tab: 'addcontact' })}}
           navigation={this.props.navigation}
           selectedContact={this.state.selectedContact}
           selectedContactTrue={() => {return this.setState({ selectedContact: true})}}
@@ -176,7 +173,6 @@ const styles = StyleSheet.create({
  * @param {Object} param0
  */
 function mapStateToProps({ contacts }) {
-  console.log("herrooooooo", )
   return {
     contacts: contacts.contacts,
     activeTab: contacts.activeTab,

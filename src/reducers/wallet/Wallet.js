@@ -14,6 +14,10 @@ import {
 
 const initialState = {
   wallets: [],
+  contacts: [], //temp array to to pass to wallets
+  tempContactName: null, //store the temp name for create/modify
+  tempContactTokens: [], //store the temporary list of tokens for the contact
+  selectedContactTab: 'contacts', //default to contacts
   tempWalletName: null,
   tokens: [],
   walletBalance: {},

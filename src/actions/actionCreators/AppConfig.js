@@ -3,7 +3,8 @@ import {
   INITIALIZE_NEW_APP_WALLET,
   TEMP_WALLET_NAME,
   DEBUG_MODE,
-} from "./ActionTypes";
+  SET_TEMPORARY_QR_ADDRESS,
+} from "../actionTypes/AppConfigTypes";
 
 
 export function enterDebug() {
