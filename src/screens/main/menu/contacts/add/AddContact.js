@@ -127,21 +127,21 @@ class AddContact extends Component {
    * If you have not added any, you just push a new token to an empty array.
    * 
    * Null is returned sometimes - bug - hack fix is loop through and remove null
+   * 
+   * Duplicate values can also be entered based on app refreshes and user flow, workout is always ensure
+   * a unique array is being passed to the action creator/reducer
    */
   selectedToken = async (token) => {
     let arrayWithoutNullValues = [];
-   
     let previouslySavedTokens = this.props.tempContactTokens;
-
     for (let i = 0; i < previouslySavedTokens.length; i++) {
-      console.log(previouslySavedTokens[i]);
-      if(previouslySavedTokens[i] !== null) {
+      if (previouslySavedTokens[i] !== null) {
         arrayWithoutNullValues.push(previouslySavedTokens[i]);
       }
     }
-
-    arrayWithoutNullValues.push(token);    
-    this.props.updateTempWalletContacts(arrayWithoutNullValues);
+    arrayWithoutNullValues.push(token);
+    let unique = [...new Set(arrayWithoutNullValues)]; 
+    this.props.updateTempWalletContacts(unique);
     //old
     await this.setState({
       tokenName: token,
