@@ -15,14 +15,24 @@ import {
   INITIALIZE_NEW_APP_WALLET,
 } from '../../actions/actionTypes/AppConfigTypes';
 
+import {
+  SET_TEMP_CONTACT_NAME,
+  SET_CONTACT_ETHEREUM_ADDRESS,
+} from '../../actions/actionTypes/ContactTypes';
+
+
+import tokenData from '../../constants/data/json/tokens.json';
+
 const initialState = {
   wallets: [],
   contacts: [], //temp array to to pass to wallets
   tempContactName: null, //store the temp name for create/modify
   tempContactTokens: [], //store the temporary list of tokens for the contact
+  tempContactAddress: null,
   selectedContactTab: 'contacts', //default to contacts
   tempWalletName: null,
   tokens: [],
+  lookUpTokenList: tokenData,
   walletBalance: {},
   tokenBalances: {},
   walletTokens: [],
@@ -73,10 +83,22 @@ export default function (state = initialState, action) {
         ...state, isFetching: false, hasError: true, errorMessage: action.err,
       };
     case SET_WALLET_TOKENS_BALANCES:
-      return { ...state, walletTokens: action.payload };
+      return {
+        ...state, walletTokens: action.payload,
+      };
     case CALCULATE_WALLET_BALANCE:
-      const { walletBalanceObject, individualTokens } = action.payload;
-      return { ...state, walletBalance: walletBalanceObject, tokenBalances: individualTokens };
+      const {walletBalanceObject, individualTokens } = action.payload;
+      return {
+        ...state, walletBalance: walletBalanceObject, tokenBalances: individualTokens,
+      };
+    case SET_TEMP_CONTACT_NAME:
+      return {
+        ...state, tempContactName: action.payload,
+      }
+    case SET_CONTACT_ETHEREUM_ADDRESS:
+    return {
+      ...state, tempContactAddress: action.payload,
+     }
     default:
       return state;
   }

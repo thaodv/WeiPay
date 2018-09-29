@@ -11,11 +11,25 @@ import * as actions from '../../../../../actions/ActionCreator';
 import LinearButton from '../../../../../components/LinearGradient/LinearButton';
 import ClearButton from '../../../../../components/LinearGradient/ClearButton';
 import BoxShadowCard from '../../../../../components/ShadowCards/BoxShadowCard';
-import barcode from '../../../../../assets/icons/barcode.png';
+import { setContactTempName, setContactTabState, setContactEthereumAddress } from '../../../../../actions/actionCreators/Contacts';
 
 
+/**
+ * Is a full screen react component
+ * This screen is used to add a new contact to the wallet contact list.
+ *
+ */
 class AddContact extends Component {
+  /**
+   * Initializes the current token list stored in state as the datasource
+   * for the scrollListView.
+   * Also initializes the local state variable to keep track of the changes made to
+   * the text fields
+   * @param {Object} props
+   */
+
   constructor(props) {
+
     super(props);
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => { return r1 !== r2 ;} });
     const current = this.props.currentContact;
@@ -29,6 +43,7 @@ class AddContact extends Component {
       tokenName.label = token.name;
       tokenName.img = token.logo.src;
       tokens.push(tokenName);
+      console.log('tokenName', tokenName);
     });
 
     this.state = {
@@ -113,7 +128,14 @@ class AddContact extends Component {
     this.setState({ tokenIMG: url });
   }
 
+  renderName(name) {
+    this.props.setContactTempName(name);
+    this.setState({contactName: name})
+  }
+
   renderAddress(address) {
+    this.props.setContactEthereumAddress(address); //need to check validity and malicious
+    //old
     const copy = Object.assign({}, this.state.contactAddress);
     const copyIMG = Object.assign({}, this.state.tokenImages);
     copy[this.state.tokenName] = address;
@@ -122,6 +144,8 @@ class AddContact extends Component {
     this.setState({ contactAddress: copy });
     this.setState({ tokenImages: copyIMG });
   }
+
+
 
   /**
    * Returns the form required to add a contact
@@ -141,22 +165,24 @@ class AddContact extends Component {
               <View style={styles.topFormInput}>
                 <FormInput
                   placeholder={"Contact's Name"}
-                  onChangeText={(name) => { return this.setState({ contactName: name }); }}
+                  onChangeText={(name) => { this.renderName(name) } }
                   inputStyle={styles.inputContactName}
                   placeholderTextColor={'#b3b3b3'}
-                  value={this.state.contactName}
+                  value={this.props.tempContactName}
                 />
               </View>
+
               <View style={styles.inputAddressContainer}>
                 <FormInput
                   placeholder={'Ethereum Address'}
-                  onChangeText={ (address) => { return this.renderAddress(address) ;}}
+                  onChangeText={ (address) => { return this.renderAddress(address)}}
                   inputStyle={styles.inputAddressText}
                   placeholderTextColor={'#b3b3b3'}
-                  value={this.state.contactAddress[this.state.tokenName]}
-                  editable={!!this.state.tokenName}
+                  // value={this.state.contactAddress[this.state.tokenName]}
+                  value={this.props.tempContactAddress}                 
                 />
               </View>
+
               <View style={styles.barcodeContainer}>
                 <TouchableOpacity onPress={() => { return this.navigate(); }}>
                   <Image
@@ -181,8 +207,7 @@ class AddContact extends Component {
                     this.inputRefs.picker = el;
                   }}
                 />
-              </View>
-           
+              </View>           
               <TouchableOpacity
                 style={styles.addAnotherText}
                 onPress={this.addAnotherCoinAddress.bind(this)}
@@ -210,7 +235,6 @@ class AddContact extends Component {
         </View>
       </SafeAreaView>
     );
-
   }
 }
 
@@ -268,12 +292,12 @@ const styles = StyleSheet.create({
     flex: 0.4,
     marginLeft: '9%',
     marginBottom: '2%',
-    marginTop: '10%',
+    marginTop: '5%',
     justifyContent: 'center',
   },
   barcodeImg: {
-    height: Dimensions.get('window').height * 0.1,
-    width: Dimensions.get('window').width * 0.18,
+    height: 45,
+    width: 45,
   },
   pickerContainer: {
     justifyContent: 'center',
@@ -375,12 +399,14 @@ const pickerStyle = {
  * @param {Object} state
  */
 
-const mapStateToProps = ({ contacts, newWallet }) => {
+const mapStateToProps = ({ contacts, Wallet }) => {
 
+  const { tempContactName, tokens, tempContactAddress } = Wallet;
   return {
-    tokens: newWallet.tokens,
-    currentContact: contacts.incompleteContactInputs,
+    tokens, tempContactName, tempContactAddress, currentContact: contacts.incompleteContactInputs,
   };
 };
 
-export default connect(mapStateToProps, actions)(AddContact);
+export default connect(mapStateToProps, {
+  actions, setContactTempName, setContactTabState, setContactEthereumAddress
+})(AddContact);

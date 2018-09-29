@@ -19,6 +19,7 @@ const tokenConfiguration = (configFlag) => {
  */
 initialSetup = () => {
   let setupTokenList = [];
+  let tokenLookupObjectSet = [];
   tokenListJson.forEach((tokenObject) => {
     let token = new Token(tokenObject.symbol, tokenObject.address);
     token.index = tokenObject.id;
@@ -45,6 +46,8 @@ initialSetup = () => {
     token.youtube = tokenObject.social.youtube;
     setupTokenList.push(token);
   });
+
+
   return setupTokenList;
 };
 

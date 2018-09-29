@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   View, StyleSheet, Dimensions, Text, SafeAreaView, RefreshControl,
 } from 'react-native';
-import { FormLabel, FormInput } from 'react-native-elements'
+import { FormLabel, FormInput } from 'react-native-elements';
 import SearchBar from 'react-native-material-design-searchbar';
 import { connect } from 'react-redux';
 import { NavigationActions } from 'react-navigation';
