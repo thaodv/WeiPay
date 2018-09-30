@@ -6,6 +6,7 @@ import {
   INITIALIZE_WALLET_CONTACTS,
   SET_CONTACT_ETHEREUM_ADDRESS,
   SELECTED_CONTACT,
+  SELECTED_CONTACT_IS_TRIGGERED,
 } from '../actionTypes/ContactTypes';
 
 import {
@@ -53,3 +54,15 @@ export function setContactTabState(tabText) {
       dispatch({ type: SELECTED_CONTACT, payload: contact });
     }
   }
+
+  /**
+   * When a contact is selected to edit, this flag will be set to true. 
+   * As soon as the selected page has loaded it will be reset.
+   */
+  export function selectedContactTrigger(flag) {
+    return (dispatch) => {
+      dispatch({ type: SELECTED_CONTACT_IS_TRIGGERED, payload: flag });
+    }
+  }
+
+  

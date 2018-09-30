@@ -13,6 +13,7 @@ import {
   INITIALIZE_APP_TOKEN_SETUP,
   TEMP_WALLET_NAME,
   INITIALIZE_NEW_APP_WALLET,
+  PACKAGE_TOKEN_DETAILS_FOR_TRANSACTION,
 } from '../../actions/actionTypes/AppConfigTypes';
 
 import {
@@ -48,6 +49,7 @@ const initialState = {
   tempContactAddress: null,
   selectedContactTab: 'contacts',
   selectedContact: null,
+  tokenInfoForTransaction: null,
 };
 
 export default function (state = initialState, action) {
@@ -125,6 +127,10 @@ export default function (state = initialState, action) {
       return {
         ...state, selectedContact: action.payload,
       };
+    case PACKAGE_TOKEN_DETAILS_FOR_TRANSACTION:
+      return {
+        ...state, tokenInfoForTransaction: action.payload,
+      }
     default:
       return state;
   }

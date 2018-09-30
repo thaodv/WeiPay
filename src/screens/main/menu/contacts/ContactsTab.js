@@ -4,7 +4,7 @@ import { NavigationActions } from 'react-navigation';
 import { ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { selectContact } from '../../../../actions/actionCreators/Contacts';
+import { selectContact, selectedContactTrigger } from '../../../../actions/actionCreators/Contacts';
 import AddFirstContact from './add/AddFirstContact';
 import SelectedContact from './SelectedContact';
 import RF from 'react-native-responsive-fontsize';
@@ -23,6 +23,7 @@ class ContactsTab extends Component {
       contact: null,
     };
   }
+
 
   /**
    * LifeCycle method (executes before the screen has been rendered)
@@ -73,11 +74,10 @@ class ContactsTab extends Component {
                 }
                 containerStyle = {styles.containerStyle}
                 onPress={
-                  () => {
-                    // this.props.selectedContactTrue()
-                    // this.setState({ contact })
+                  () => {                  
                     console.log('in this click');
-                    this.props.selectContact(contact);
+                    this.props.selectContact(contact);   
+                    this.setState({selectedContact: true });                                   
                   }}
              />
             </BoxShadowCard>
@@ -93,8 +93,8 @@ class ContactsTab extends Component {
   render() {
     const show = this.props.contacts.length === 0 ?
         <AddFirstContact setAddContactTab={this.props.setAddContactTab}/>
-      : this.props.selectedContact === true ?
-        <SelectedContact contact={this.state.contact} setSelectedContactFalse={this.props.setSelectedContactFalse} navigation={this.props.navigation}/>
+      : this.state.selectedContact === true ?
+        <SelectedContact contact={this.props.selectedContact} setSelectedContactFalse={this.props.setSelectedContactFalse} navigation={this.props.navigation}/>
       :
         <View style={styles.list}>
           {this.renderRow()}
@@ -103,9 +103,6 @@ class ContactsTab extends Component {
   }
 }
 
-/**
- * Styles are not being in this file
- */
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
@@ -169,10 +166,11 @@ const styles = StyleSheet.create({
 // }
 
 function mapStateToProps({ Wallet }) {
-  const { contacts } = Wallet;
-  return { contacts };
+  const { contacts, selectedContact, selectedContactTrigger } = Wallet;
+  return { contacts, selectedContact, selectedContactTrigger };
 }
 
 export default connect(mapStateToProps, {
   selectContact,
+  selectedContactTrigger,
 })(ContactsTab);

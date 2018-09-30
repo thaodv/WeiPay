@@ -4,9 +4,9 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { NavigationActions } from 'react-navigation';
-
 import RF from 'react-native-responsive-fontsize';
 import * as actions from '../../../../actions/ActionCreator';
+import { packageTransactionTokenData } from '../../../../actions/actionCreators/AppConfig';
 import BoxShadowCard from '../../../../components/ShadowCards/BoxShadowCard';
 import LinearButton from '../../../../components/LinearGradient/LinearButton';
 import ClearButton from '../../../../components/LinearGradient/ClearButton';
@@ -14,75 +14,71 @@ import EditContact from './add/EditContact';
 
 
 class ContactAddresses extends Component {
-
   state = {
     editContact: false,
   }
 
   componentWillMount() {
-    const addresses = this.props.contact.contactAddress;
-    const data = [];
-    for (const key of Object.keys(addresses)) {
-      address = { [key]: addresses[key] };
-      data.push(address);
-    }
+    const address = this.props.selectedContact.address;
+    const tokens = this.props.selectedContact.tokenList;
+    console.log('in selected contact page', this.props.selectedContact);
     const ds = new ListView.DataSource({
-      rowHasChanged: (r1, r2) => { return r1 !== r2 ;},
+      rowHasChanged: (r1, r2) => { return r1 !== r2; },
     });
-    this.dataSource = ds.cloneWithRows(data);
+    this.dataSource = ds.cloneWithRows(tokens);
   }
 
-  navigateToCoinSend = (address, token) => {
-    for (let i = 0; i < (this.props.tokens.length - 1); i++) {
-      if (token === this.props.tokens[i].name) {
-        this.props.addTokenInfo(this.props.tokens[i]);
+  /**
+   * Because we assume all tokens for a contact share the same ethereum address, you can just search for the address
+   * of the selected token name you have selected with reference to your tokens in you wallet.
+   */
+  navigateToCoinSend = (tokenName) => {
+    let tokenObject = {};
+    for( let i = 0; i < this.props.tokens.length; i++) {
+      if(tokenName === this.props.tokens[i].name) {
+        tokenObject.name = tokenName;
+        tokenObject.symbol = this.props.tokens[i].symbol;
+        tokenObject.contractAddress = this.props.tokens[i].address;
+        tokenObject.toAddress = this.props.selectedContact.address;
+        tokenObject.toName = this.props.selectedContact.name;
+        console.log('you are trying to send this token', tokenName, + " with address " + this.props.tokens[i].address);
+        console.log(tokenObject);
       }
     }
-    this.props.getQRCodeData(address);
-    this.props.saveDataForCoinSend(address);
-    const navigateToCreateOrRestore = NavigationActions.navigate({
+    console.log(tokenObject);
+    this.props.packageTransactionTokenData(tokenObject);
+    const navigateToTransaction = NavigationActions.navigate({
       routeName: 'TokenFunctionality',
     });
-    this.props.navigation.dispatch(navigateToCreateOrRestore);
+    this.props.navigation.dispatch(navigateToTransaction);
   };
 
   navigateToEditContact = () => {
-    const navigateToCreateOrRestore = NavigationActions.navigate({
-      routeName: 'editContact',
-      params: { contact: this.props.contact },
-    });
-    this.props.navigation.dispatch(navigateToCreateOrRestore);
+    // const navigateToCreateOrRestore = NavigationActions.navigate({
+    //   routeName: 'editContact',
+    //   params: { contact: this.props.contact },
+    // });
+    // this.props.navigation.dispatch(navigateToCreateOrRestore);
   };
 
-  renderRow(address) {
-    const contactInfo = this.props.contact.images;
-    let url;
-
-    for (const key in contactInfo) {
-      if (contactInfo.hasOwnProperty(key)) {
-
-        if (key == Object.keys(address)[0]) {
-          url = contactInfo[key];
-        }
-
-      }
-    }
-
+  renderRow(tokenName) {
+    // const contactInfo = this.props.contact.images;
+    // let url;
+    // for (const key in contactInfo) {
+    //   if (contactInfo.hasOwnProperty(key)) {
+    //     if (key == Object.keys(address)[0]) {
+    //       url = contactInfo[key];
+    //     }
+    //   }
+    // }
    return (
-
       <View style={styles.listItemContainer}>
-        <TouchableOpacity onPress={() => { return this.navigateToCoinSend(address[Object.keys(address)[0]], Object.keys(address)[0]) ;}}>
+        <TouchableOpacity onPress={() => { return this.navigateToCoinSend(tokenName); }}>
           <BoxShadowCard>
             <View style={styles.mainListItemContentContainter}>
-              <View style={styles.mainListItemIconContainer}>
-                <Image
-                     source={{ uri: url }}
-                     style={styles.iconImage}
-                />
-              </View>
               <View style={styles.mainListItemTextContainer}>
-                <Text style={styles.CoinTypeText}>{Object.keys(address)[0]} </Text>
-                <Text style={styles.textAddressText}>{address[Object.keys(address)[0]]}</Text>
+                <Text style={styles.CoinTypeText}> { tokenName } </Text>
+                {/* <Text style={styles.textAddressText}>{address[Object.keys(address)[0]]}</Text> */}
               </View>
             </View>
           </BoxShadowCard>
@@ -92,17 +88,17 @@ class ContactAddresses extends Component {
   }
 
   renderSelectedContactOrEditedContact = () => {
-    if (this.state.editContact === true) {
-      this.props.updateSavedContactInputs(this.props.contact);
-      return (
-        <EditContact navigation={this.props.navigation} contact={this.props.contact} setSelectedContactFalse={this.props.setSelectedContactFalse}/>
-      );
-    }
+    // if (this.state.editContact === true) {
+    //   //this.props.updateSavedContactInputs(this.props.contact);
+    //   return (
+    //     <EditContact navigation={this.props.navigation} contact={this.props.contact} setSelectedContactFalse={this.props.setSelectedContactFalse}/>
+    //   );
+    // }
 
     return (
       <View style={styles.mainContainer}>
         <View style={styles.scrollViewContainer}>
-          <Text style={styles.contactName}>{this.props.contact.name}</Text>
+          <Text style={styles.contactName}>{this.props.selectedContact.name}</Text>
           <ScrollView style={styles.scrollView} >
             <ListView dataSource={this.dataSource} renderRow={this.renderRow.bind(this)} removeClippedSubviews={false} />
           </ScrollView>
@@ -128,8 +124,8 @@ class ContactAddresses extends Component {
   }
 
   deleteContact() {
-    this.props.deleteContact(this.props.contact.name)
-    this.props.setSelectedContactFalse()
+    //this.props.deleteContact(this.props.contact.name)
+    //this.props.setSelectedContactFalse()
   }
 
   render() {
@@ -161,7 +157,7 @@ const styles = StyleSheet.create({
   listItemContainer: {
     flex: 1,
     alignItems: 'stretch',
-    height: Dimensions.get('window').height * 0.12,
+    height: Dimensions.get('window').height * 0.095,
   },
   scrollView: {
     flex: 1,
@@ -254,10 +250,14 @@ const styles = StyleSheet.create({
   btnFlex: {
     flex:1,
   },
-})
+});
 
-function mapStateToProps({ newWallet }) {
-  return { tokens: newWallet.tokens };
+function mapStateToProps({ Wallet }) {
+  const { selectedContact, tokens } = Wallet;
+  return { selectedContact, tokens };
 }
 
-export default connect(mapStateToProps, actions)(ContactAddresses);
+export default connect(mapStateToProps, {
+  actions,
+  packageTransactionTokenData,
+})(ContactAddresses);

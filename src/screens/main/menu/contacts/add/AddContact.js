@@ -140,7 +140,6 @@ class AddContact extends Component {
    * Tokens already are saved globally, this just resets the picker value
    */
   addAnotherCoinAddress() {
-    //old
     this.setState({ tokenName: 'null' });
     this.setState({ contactAddressInput: '' });
   }
@@ -150,43 +149,36 @@ class AddContact extends Component {
    * If you have added multiple tokens, you can push your new token as well
    * If you have not added any, you just push a new token to an empty array.
    *
-   * Null is returned sometimes - bug - hack fix is loop through and remove null
+   * Null is returned sometimes - bug - hack fix is loop through and remove null & initial if to check
    *
    * Duplicate values can also be entered based on app refreshes and user flow, workout is always ensure
    * a unique array is being passed to the action creator/reducer
+   *
    */
   selectedToken = async (token) => {
-    let arrayWithoutNullValues = [];
-    let previouslySavedTokens = this.props.tempContactTokens;
-    for (let i = 0; i < previouslySavedTokens.length; i++) {
-      if (previouslySavedTokens[i] !== null) {
-        arrayWithoutNullValues.push(previouslySavedTokens[i]);
+    if (token == null) {
+      console.log('this token is null', token);
+    } else {
+      let arrayWithoutNullValues = [];
+      let previouslySavedTokens = this.props.tempContactTokens;
+      for (let i = 0; i < previouslySavedTokens.length; i++) {
+        if (previouslySavedTokens[i] !== null) {
+          arrayWithoutNullValues.push(previouslySavedTokens[i]);
+        }
       }
+      arrayWithoutNullValues.push(token);
+      let unique = [...new Set(arrayWithoutNullValues)];
+      this.props.updateTempWalletContacts(unique);
     }
-    arrayWithoutNullValues.push(token);
-    let unique = [...new Set(arrayWithoutNullValues)];
-    this.props.updateTempWalletContacts(unique);
-    //old
-    await this.setState({
-      tokenName: token,
-    });
   }
 
   renderName(name) {
     this.props.setContactTempName(name);
-    this.setState({contactName: name}) //old
+    this.setState({ contactName: name }) //old
   }
 
   renderAddress(address) {
     this.props.setContactEthereumAddress(address); //need to check validity and malicious
-    //old
-    const copy = Object.assign({}, this.state.contactAddress);
-    const copyIMG = Object.assign({}, this.state.tokenImages);
-    copy[this.state.tokenName] = address;
-    copyIMG[this.state.tokenName] = this.state.tokenIMG;
-    this.setState({ contactAddressInput: address });
-    this.setState({ contactAddress: copy });
-    this.setState({ tokenImages: copyIMG });
   }
 
   render() {
@@ -203,7 +195,7 @@ class AddContact extends Component {
               <View style={styles.topFormInput}>
                 <FormInput
                   placeholder={"Contact's Name"}
-                  onChangeText={(name) => { this.renderName(name) } }
+                  onChangeText={(name) => { this.renderName(name); } }
                   inputStyle={styles.inputContactName}
                   placeholderTextColor={'#b3b3b3'}
                   value={this.props.tempContactName}
@@ -454,5 +446,5 @@ export default connect(mapStateToProps, {
   setContactEthereumAddress,
   updateTempWalletContacts,
   saveWalletContacts,
-  resetTempContactState
+  resetTempContactState,
 })(AddContact);

@@ -3,6 +3,7 @@ import {
   INITIALIZE_NEW_APP_WALLET,
   TEMP_WALLET_NAME,
   DEBUG_MODE,
+  PACKAGE_TOKEN_DETAILS_FOR_TRANSACTION,
   SET_TEMPORARY_QR_ADDRESS,
 } from "../actionTypes/AppConfigTypes";
 
@@ -55,3 +56,13 @@ export function initializeAppWallet(currentWallet, walletName, previousWalletSta
   };
 }
 
+/**
+ * Saves token contract address, symbol, name, and to wallet address for a transaction. 
+ * Initially created for when a contact's token has been selected for a transaction and the data 
+ * needs to be saved to global state for when the coinsend page renders.
+ */
+export function packageTransactionTokenData(data) {
+  return (dispatch) => {
+    dispatch({ type: PACKAGE_TOKEN_DETAILS_FOR_TRANSACTION, payload: data });
+  };
+}

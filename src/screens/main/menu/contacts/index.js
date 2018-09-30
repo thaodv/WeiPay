@@ -7,12 +7,12 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import RF from "react-native-responsive-fontsize"
 import * as actions from '../.././../../actions/ActionCreator';
+import { setContactTabState } from '../../../../actions/actionCreators/Contacts';
 import AddFirstContact from './add/AddFirstContact';
 import ContactBackWithMenuNav from "../../../../components/customPageNavs/ContactBackWithMenuNav"
 import ContactTabNavigator from '../../../../components/customPageNavs/ContactTabNavigator'
 import ContactsTab from './ContactsTab'
 import AddContact from './add/AddContact';
-import TabNavigator from '../../../../components/customPageNavs/CustomTabNavigator'
 
 /**
  * Screen that displays all the contacts that have been added to
@@ -23,10 +23,11 @@ class Contacts extends Component {
     super(props);
     this.state = {
       active: true,
-      tab: this.props.activeTab,
+      tab: this.props.selectedContactTab,
       selectedContact: false,
     };
   }
+
 
   displayContactTab() {
     if (this.state.tab === 'contacts') {
@@ -34,9 +35,9 @@ class Contacts extends Component {
         <ContactsTab
           setAddContactTab={() => { return this.setState({ tab: 'addcontact' })}}
           navigation={this.props.navigation}
-          selectedContact={this.state.selectedContact}
-          selectedContactTrue={() => {return this.setState({ selectedContact: true})}}
-          setSelectedContactFalse={() => {return this.setState({ selectedContact: false})}}
+          selectedContact={this.props.selectedContact}
+          selectedContactTrue={() => { return this.setState({ selectedContact: true })}}
+          setSelectedContactFalse={() => { return this.setState({ selectedContact: false })}}
         />
       );
     }
@@ -46,15 +47,13 @@ class Contacts extends Component {
   }
 
   setAddContactTab = () => {
-    this.props.contactsActiveTab('addcontact')
-    this.setState({ tab: 'addcontact' });
-    this.setState({ selectedContact: false });
+    this.props.setContactTabState('addcontact');
+    this.setState({ tab: 'addcontact', selectedContact: false });
   }
 
   setContactTab = () => {
-    this.props.contactsActiveTab('contacts');
-    this.setState({ tab: 'contacts' });
-    this.setState({ selectedContact: false });
+    this.props.setContactTabState('contacts');
+    this.setState({ tab: 'contacts', selectedContact: false });
   }
 
   /**
@@ -91,9 +90,6 @@ class Contacts extends Component {
   }
 }
 
-/**
- * Styles are not being in this file
- */
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
@@ -172,11 +168,18 @@ const styles = StyleSheet.create({
  * state variable and is returns an object with that information
  * @param {Object} param0
  */
-function mapStateToProps({ contacts }) {
-  return {
-    contacts: contacts.contacts,
-    activeTab: contacts.activeTab,
-  };
+// function mapStateToProps({ contacts }) {
+//   return {
+//     contacts: contacts.contacts,
+//     activeTab: contacts.activeTab,
+//   };
+// }
+
+function mapStateToProps({ Wallet }) {
+  const { contacts, selectedContactTab, selectedContact } = Wallet;
+  return { contacts, selectedContactTab, selectedContact };
 }
 
-export default connect(mapStateToProps, actions)(Contacts);
+export default connect(mapStateToProps, {
+  actions, setContactTabState,
+})(Contacts);
