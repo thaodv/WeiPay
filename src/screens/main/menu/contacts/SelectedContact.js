@@ -31,6 +31,7 @@ class ContactAddresses extends Component {
   /**
    * Because we assume all tokens for a contact share the same ethereum address, you can just search for the address
    * of the selected token name you have selected with reference to your tokens in you wallet.
+   * You save all this relevant information into state and will be retrieved when you are in the coin transaction page.
    */
   navigateToCoinSend = (tokenName) => {
     let tokenObject = {};
@@ -40,12 +41,9 @@ class ContactAddresses extends Component {
         tokenObject.symbol = this.props.tokens[i].symbol;
         tokenObject.contractAddress = this.props.tokens[i].address;
         tokenObject.toAddress = this.props.selectedContact.address;
-        tokenObject.toName = this.props.selectedContact.name;
-        console.log('you are trying to send this token', tokenName, + " with address " + this.props.tokens[i].address);
-        console.log(tokenObject);
+        tokenObject.toName = this.props.selectedContact.name;       
       }
-    }
-    console.log(tokenObject);
+    } 
     this.props.packageTransactionTokenData(tokenObject);
     const navigateToTransaction = NavigationActions.navigate({
       routeName: 'TokenFunctionality',

@@ -426,7 +426,6 @@ const styles = StyleSheet.create({
     color: '#c0c0c0',
     letterSpacing: 0.5,
   },
-
 });
 /**
  * Reterives the wallet created/reterived during the initial
@@ -436,12 +435,19 @@ const styles = StyleSheet.create({
  * @param {Object} state
  */
 const mapStateToProps = (state) => {
+  // return {
+  //   wallet: state.newWallet.wallet,
+  //   addressData: state.newWallet.QrData,
+  //   token: state.newWallet.current_token,
+  //   txnFee: state.newWallet.txnFee,
+  //   contactAddress: state.contacts.contactDataforCoinSend,
+  // };
   return {
-    wallet: state.newWallet.wallet,
-    addressData: state.newWallet.QrData,
-    token: state.newWallet.current_token,
+    wallet: state.Wallet.wallets[0].hdWallet,
+    addressData: state.Wallet.tokenInfoForTransaction.toAddress, //to address
+    token: state.Wallet.tokenInfoForTransaction,
     txnFee: state.newWallet.txnFee,
-    contactAddress: state.contacts.contactDataforCoinSend,
+    contactAddress: state.Wallet.tokenInfoForTransaction.toAddress, //to address
   };
 };
 export default connect(mapStateToProps, action)(CoinSend);
