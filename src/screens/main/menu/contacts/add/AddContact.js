@@ -98,21 +98,14 @@ class AddContact extends Component {
     const oldContactList = this.props.contacts;
     const newContact = new Contact(currentContactName, currentContactAddress, currentTokenList);
     oldContactList.push(newContact);
-
     const validContactName = this.checkContactName(oldContactList, currentContactName);
-    const validContactAddress = this.checkContactAddress(oldContactList, currentContactName);
-
-    if (validContactName && validContactAddress) {
+    const validContactAddress = this.checkContactAddress(oldContactList, currentContactAddress);
+    if (!validContactName || !validContactAddress) {
+      console.log('contact is invalid');
+    } else {
       this.props.saveWalletContacts(oldContactList);
       this.props.resetTempContactState();
-    } else {
-      console.log('contact is invalid');
     }
-
-
-
-    //clear state
-
     //old
     //this.props.completeContact(currentContactName, currentContactAddress, 'notgood');
     this.setState({ contactName: '' });
