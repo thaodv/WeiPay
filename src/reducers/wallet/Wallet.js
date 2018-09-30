@@ -16,11 +16,13 @@ import {
 } from '../../actions/actionTypes/AppConfigTypes';
 
 import {
+  SET_ACTIVE_CONTACT_TAB,
   SET_TEMP_CONTACT_NAME,
   SET_CONTACT_ETHEREUM_ADDRESS,
   UPDATE_WALLET_CONTACTS,
   INITIALIZE_WALLET_CONTACTS,
   RESET_TEMP_CONTACT_STATE,
+  SELECTED_CONTACT,
 } from '../../actions/actionTypes/ContactTypes';
 
 
@@ -45,6 +47,7 @@ const initialState = {
   tempContactTokens: [],
   tempContactAddress: null,
   selectedContactTab: 'contacts',
+  selectedContact: null,
 };
 
 export default function (state = initialState, action) {
@@ -94,6 +97,10 @@ export default function (state = initialState, action) {
       return {
         ...state, walletBalance: walletBalanceObject, tokenBalances: individualTokens,
       };
+    case SET_ACTIVE_CONTACT_TAB:
+      return {
+        ...state, selectedContactTab: action.payload,
+      };
     case SET_TEMP_CONTACT_NAME:
       return {
         ...state, tempContactName: action.payload,
@@ -106,13 +113,17 @@ export default function (state = initialState, action) {
       return {
         ...state, tempContactTokens: action.payload,
       };
-    case INITIALIZE_WALLET_CONTACTS: 
+    case INITIALIZE_WALLET_CONTACTS:
       return {
         ...state, contacts: action.payload,
       };
     case RESET_TEMP_CONTACT_STATE:
       return {
         ...state, tempContactName: null, tempContactTokens: [], tempContactAddress: null,
+      };
+    case SELECTED_CONTACT:
+      return {
+        ...state, selectedContact: action.payload,
       };
     default:
       return state;

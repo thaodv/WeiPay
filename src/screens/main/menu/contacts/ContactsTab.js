@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, ListView, Dimensions } from 'react-native';
 import { NavigationActions } from 'react-navigation';
-import { Icon, Button, FormLabel, FormInput, FormValidationMessage, List, ListItem } from 'react-native-elements';
+import { ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import { selectContact } from '../../../../actions/actionCreators/Contacts';
 import AddFirstContact from './add/AddFirstContact';
-import BackWithMenuNav from "../../../../components/customPageNavs/BackWithMenuNav"
-import ContactTabNavigator from '../../../../components/customPageNavs/ContactTabNavigator'
-import SelectedContact from './SelectedContact'
-import RF from "react-native-responsive-fontsize"
+import SelectedContact from './SelectedContact';
+import RF from 'react-native-responsive-fontsize';
 import BoxShadowCard from '../../../../components/ShadowCards/BoxShadowCard';
 
 /**
@@ -16,14 +15,13 @@ import BoxShadowCard from '../../../../components/ShadowCards/BoxShadowCard';
  * the wallet
  */
 class ContactsTab extends Component {
-
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       active: true,
       selectedContact: false,
-      contact: null
-    }
+      contact: null,
+    };
   }
 
   /**
@@ -32,10 +30,10 @@ class ContactsTab extends Component {
    * data source for the list view
    */
   componentWillMount() {
-    let data = this.props.contacts  //replace here
+    let data = this.props.contacts;  //replace here
     const ds = new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2
-    })
+      rowHasChanged: (r1, r2) => r1 !== r2,
+    });
     this.dataSource = ds.cloneWithRows(data);
   }
 
@@ -45,10 +43,10 @@ class ContactsTab extends Component {
    * data source for the list view
    */
   componentWillReceiveProps(nextProps) {
-    let data = nextProps.contacts   //here
+    let data = nextProps.contacts;   //here
     const ds = new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2
-    })
+      rowHasChanged: (r1, r2) => r1 !== r2,
+    });
     this.dataSource = ds.cloneWithRows(data);
   }
 
@@ -62,7 +60,7 @@ class ContactsTab extends Component {
     return (
       this.props.contacts.map(contact =>
         <View style={styles.mainListItemContainer} key={contact.name}>
-          <BoxShadowCard> 
+          <BoxShadowCard>
             <ListItem
               chevronColor="#000000"
               key={contact.name}
@@ -76,14 +74,16 @@ class ContactsTab extends Component {
                 containerStyle = {styles.containerStyle}
                 onPress={
                   () => {
-                    this.props.selectedContactTrue()
-                    this.setState({ contact })
+                    // this.props.selectedContactTrue()
+                    // this.setState({ contact })
+                    console.log('in this click');
+                    this.props.selectContact(contact);
                   }}
-             /> 
+             />
             </BoxShadowCard>
-        </View>
+        </View>,
       )
-    )
+    );
   }
 
   /**
@@ -98,8 +98,8 @@ class ContactsTab extends Component {
       :
         <View style={styles.list}>
           {this.renderRow()}
-        </View>
-      return show
+        </View>;
+      return show;
   }
 }
 
@@ -112,41 +112,41 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     justifyContent: 'flex-start',
     paddingTop: '2.5%',
-    backgroundColor: "#fafbfe",
+    backgroundColor: '#fafbfe',
   },
   mainListItemContainer: {
-    marginTop:'3%', 
+    marginTop: '3%',
     height: Dimensions.get('window').height * 0.1,
     width: Dimensions.get('window').width * 0.85,
   },
   listItemContainer: {
-    flexDirection:'row', 
-    justifyContent:"center", 
-    marginLeft:'5%'
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginLeft: '5%',
   },
   contactNameText: {
     fontSize: RF(2.4),
-    fontFamily: "Cairo-Regular",
-    alignItems:"flex-start",
-    flex:1,
+    fontFamily: 'Cairo-Regular',
+    alignItems: 'flex-start',
+    flex: 1,
     width: '90%',
     letterSpacing: 0.5,
-    top:'1%'
+    top: '1%',
   },
   containerStyle: {
-    borderWidth:0,            
+    borderWidth: 0,
     borderBottomWidth: 0,
   },
   contentContainer: {
-    marginTop: 25
+    marginTop: 25,
   },
   form: {
-    width: 340
+    width: 340,
   },
   btnContainer: {
     flex: 1,
     justifyContent: 'flex-end',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   listItem: {
     marginTop: '2.5%',
@@ -155,9 +155,9 @@ const styles = StyleSheet.create({
   list: {
     marginTop: '4%',
     flex: 1,
-    marginLeft: '9%'
+    marginLeft: '9%',
   },
-})
+});
 
 /**
  * Method reterives the list contacts that is stored in the global
@@ -173,4 +173,6 @@ function mapStateToProps({ Wallet }) {
   return { contacts };
 }
 
-export default connect(mapStateToProps)(ContactsTab);
+export default connect(mapStateToProps, {
+  selectContact,
+})(ContactsTab);

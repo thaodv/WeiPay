@@ -5,6 +5,7 @@ import {
   SET_TEMP_CONTACT_NAME,
   INITIALIZE_WALLET_CONTACTS,
   SET_CONTACT_ETHEREUM_ADDRESS,
+  SELECTED_CONTACT,
 } from '../actionTypes/ContactTypes';
 
 import {
@@ -44,5 +45,11 @@ export function setContactTabState(tabText) {
   export function saveWalletContacts(updatedContacts) {
     return (dispatch) => {
       dispatch({ type: INITIALIZE_WALLET_CONTACTS, payload: updatedContacts });
+    }
+  }
+
+  export function selectContact(contact) {
+    return (dispatch) => {
+      dispatch({ type: SELECTED_CONTACT, payload: contact });
     }
   }
