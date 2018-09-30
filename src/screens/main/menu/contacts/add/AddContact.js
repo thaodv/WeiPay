@@ -99,8 +99,7 @@ class AddContact extends Component {
     const newContact = new Contact(currentContactName, currentContactAddress, currentTokenList);
     oldContactList.push(newContact);
     const validContactName = this.checkContactName(oldContactList, currentContactName);
-    const validContactAddress = this.checkContactAddress(oldContactList, currentContactAddress);
-    if (!validContactName || !validContactAddress) {
+    if (!validContactName) {
       console.log('contact is invalid');
     } else {
       this.props.saveWalletContacts(oldContactList);
@@ -122,24 +121,6 @@ class AddContact extends Component {
     let isValid = true;
     contactList.forEach(contact => {
       if(proposedName == contact.name) {
-        track++;   
-      }
-    });
-    if(track > 1) {
-      return false
-    } 
-    return true;
-  }
-
-  /**
-   * This will check if the address has already been added to another contact.
-   * This will also include the malicious address checks and other validation (future)
-   */
-  checkContactAddress(contactList, proposedAddress) {
-    let track = 0;
-    let isValid = true;
-    contactList.forEach(contact => {
-      if(proposedAddress == contact.address) {
         track++;   
       }
     });

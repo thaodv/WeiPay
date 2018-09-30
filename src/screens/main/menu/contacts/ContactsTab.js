@@ -32,7 +32,7 @@ class ContactsTab extends Component {
    * data source for the list view
    */
   componentWillMount() {
-    let data = this.props.contacts
+    let data = this.props.contacts  //replace here
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     })
@@ -45,7 +45,7 @@ class ContactsTab extends Component {
    * data source for the list view
    */
   componentWillReceiveProps(nextProps) {
-    let data = nextProps.contacts
+    let data = nextProps.contacts   //here
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     })
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     marginTop: '4%',
     flex: 1,
     marginLeft: '9%'
-  }
+  },
 })
 
 /**
@@ -164,8 +164,13 @@ const styles = StyleSheet.create({
  * state variable and is returns an object with that information
  * @param {Object} param0
  */
-function mapStateToProps({ contacts }) {
-  return { contacts: contacts.contacts }
+// function mapStateToProps({ contacts }) {
+//   return { contacts: contacts.contacts }
+// }
+
+function mapStateToProps({ Wallet }) {
+  const { contacts } = Wallet;
+  return { contacts };
 }
 
 export default connect(mapStateToProps)(ContactsTab);
