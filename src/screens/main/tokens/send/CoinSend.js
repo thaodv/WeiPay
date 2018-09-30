@@ -435,13 +435,6 @@ const styles = StyleSheet.create({
  * @param {Object} state
  */
 const mapStateToProps = (state) => {
-  // return {
-  //   wallet: state.newWallet.wallet,
-  //   addressData: state.newWallet.QrData,
-  //   token: state.newWallet.current_token,
-  //   txnFee: state.newWallet.txnFee,
-  //   contactAddress: state.contacts.contactDataforCoinSend,
-  // };
   return {
     wallet: state.Wallet.wallets[0].hdWallet,
     addressData: state.Wallet.tokenInfoForTransaction.toAddress, //to address

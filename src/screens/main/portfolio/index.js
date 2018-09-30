@@ -94,9 +94,11 @@ class Portfolio extends Component {
   renderRow = (token) => {
     return (
         <TouchableOpacity
-          onPress={() => {
-            this.props.addTokenInfo(token);
-            this.props.navigation.navigate('TokenFunctionality');
+          onPress={() => {          
+            const navigateToTransaction = NavigationActions.navigate({
+              routeName: 'TokenFunctionality',
+            });
+            this.props.navigation.dispatch(navigateToTransaction);
           }}
           style={styles.listItemParentContainer}
         >

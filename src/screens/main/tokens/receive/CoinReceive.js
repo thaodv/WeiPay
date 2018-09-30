@@ -34,17 +34,17 @@ class CoinReceive extends Component {
       <SafeAreaView style={styles.safeAreaView}>
         <View style={mainContainer}>
           <View style={contentContainer} >
-            <View style={imageContainer}>
+            {/* <View style={imageContainer}>
               <QRCode
-                value={this.props.walletAddress}
+                value={this.props.wallet.address}
                 size={ 225}
                 bgColor='#27c997'
                 fgColor='#fafbfe' />
             </View>
             <View style={addressContainer}>
                 <Text style={addressTitle}>Address: </Text>
-                <Text style={addressValue}>{this.props.walletAddress}</Text>
-            </View>            
+                <Text style={addressValue}>{this.props.wallet.address}</Text>
+            </View>             */}
           </View>
           <View style={footerGrandparentContainer}>
             <View style={footerParentContainer}>
@@ -136,8 +136,18 @@ const styles = StyleSheet.create({
  * create/reterived during the initial process
  * @param {Object} state
  */
-const mapStateToProps = state => ({
-  walletAddress: state.newWallet.wallet.address,
-});
+
+const mapStateToProps = (state) => {
+  console.log('revieve', state.Wallet);
+  
+  return {
+    wallet: state,
+  };
+};
+
+// const mapStateToProps = state => ({
+
+//   walletAddress: state.Wallet.wallets[0].hdWallet.address,
+// });
 
 export default connect(mapStateToProps, null)(CoinReceive);
