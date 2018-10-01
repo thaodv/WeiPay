@@ -1,17 +1,19 @@
-/**
- * All tokens/coins the user has will be passed in and an array of balances will be returned.
- * Delegate Ethereum and ERC20 token balance lookup here. 
- * The 0 index will be the user's eth -> corresponds to index in the tokens array in the wallet reducer.
- * Any subsequent coins will have an index of 1 or greater, unless they have removed ether from their wallet.
- * This use case will be address in a subsequent branch.
- */
-
 import provider from '../constants/Providers';
 import ERC20ABI from '../constants/data/json/ERC20ABI.json';
 
 const ethers = require('ethers');
 let wallet;
 
+/**
+ * processAllTokenBalances takes a privateKey and a dataset, it will loop through the tokens in the wallet 
+ * and based on whether it is an erc20 token or ether, it will delegate the call to look up its balance 
+ * to the respective function. An array called allBalances will hold the token symbol and the amount of 
+ * tokens the user has.
+ * 
+ * A second variable is being generated - tokenSymbolString. This is a string of all the symbol the user 
+ * holds delimtied with a  ',' unless it is the last token being added. This is used to query the api and 
+ * pass in all token for a single request.
+ */
 const processAllTokenBalances = async (privateKey, dataSet) => {
   let allBalances = [];
   let tokenApiRequestString = '';

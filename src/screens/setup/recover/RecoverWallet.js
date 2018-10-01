@@ -22,10 +22,10 @@ class RecoverWallet extends Component {
     };
   }
 
-    /**
-     * A new wallet is initialized and created with a wallet name.
-     */
-    navigate = async () => {
+  /**
+  * A new wallet is initialized and created with a wallet name.
+  */
+  navigate = async () => {
       const navigateToTokens = NavigationActions.navigate({
         routeName: 'mainStack',
       });

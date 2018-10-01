@@ -1,9 +1,13 @@
 import tokenListJson from '../constants/data/json/coins.json';
 import Token from './classes/Token';
 
+/**
+ * tokenConfiguration handles the tokens configuration when adding them to state. When a new token is added in the
+ * application if will pass in another flag and be delt with accordingly.
+ * Create Token, and token lookup, and selected a token from a list will need to implement this.
+ */
 const tokenConfiguration = (configFlag) => {
   let tokenList;
-
   switch (configFlag) {
     case 'setup':
       tokenList = this.initialSetup();
@@ -15,7 +19,8 @@ const tokenConfiguration = (configFlag) => {
 };
 
 /**
- * initialSetup() returns an array of default tokens objects.
+ * initialSetup() returns an array of default tokens objects when the app loads up for the first time.
+ * This allows us to work with objects when adding tokens to state. .
  */
 initialSetup = () => {
   let setupTokenList = [];

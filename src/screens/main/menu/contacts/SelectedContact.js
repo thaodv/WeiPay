@@ -60,15 +60,6 @@ class ContactAddresses extends Component {
   };
 
   renderRow(tokenName) {
-    // const contactInfo = this.props.contact.images;
-    // let url;
-    // for (const key in contactInfo) {
-    //   if (contactInfo.hasOwnProperty(key)) {
-    //     if (key == Object.keys(address)[0]) {
-    //       url = contactInfo[key];
-    //     }
-    //   }
-    // }
    return (
       <View style={styles.listItemContainer}>
         <TouchableOpacity onPress={() => { return this.navigateToCoinSend(tokenName); }}>
@@ -76,7 +67,6 @@ class ContactAddresses extends Component {
             <View style={styles.mainListItemContentContainter}>
               <View style={styles.mainListItemTextContainer}>
                 <Text style={styles.CoinTypeText}> { tokenName } </Text>
-                {/* <Text style={styles.textAddressText}>{address[Object.keys(address)[0]]}</Text> */}
               </View>
             </View>
           </BoxShadowCard>

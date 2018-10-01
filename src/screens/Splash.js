@@ -8,6 +8,9 @@ class Splash extends Component {
     this.checkLoggedIn();
   }
 
+  /**
+   * If the user has created any wallets, they will be redirected to the mainStack.
+   */
   checkLoggedIn() {
     const routeName = this.props.wallets.length > 0 ?  "mainStack" : "terms";
     const resetAction = NavigationActions.reset({

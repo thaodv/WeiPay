@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { View, TouchableWithoutFeedback, StyleSheet, Text, Keyboard, Dimensions, SafeAreaView } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
-import { FormInput, Card } from 'react-native-elements';
+import { FormInput } from 'react-native-elements';
 import { setTempWalletName, initializeAppWallet } from '../../../actions/actionCreators/AppConfig';
-import LinearButton   from '../../../components/LinearGradient/LinearButton';
+import LinearButton from '../../../components/LinearGradient/LinearButton';
 import BoxShadowCard from '../../../components/ShadowCards/BoxShadowCard';
 import BackWithMenuNav from '../../../components/customPageNavs/BackWithMenuNav';
 import RF from "react-native-responsive-fontsize"

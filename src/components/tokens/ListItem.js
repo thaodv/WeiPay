@@ -64,7 +64,7 @@ class CoinListItem extends Component {
   renderBoxContainerStyling(coin) {
     if (this.state.totalTaps == 1 && (coin.selected)) {
       return { borderColor: '#27c997', borderWidth: 1 }
-    }else if (this.state.totalTaps == 2 && coin.selected) {
+    } else if (this.state.totalTaps == 2 && coin.selected) {
       return {borderColor: 'red', borderWidth: 1}
     }
   }

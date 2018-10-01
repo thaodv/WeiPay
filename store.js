@@ -6,6 +6,9 @@ import promise from 'redux-promise';
 import logger from 'redux-logger';
 import AppReducer from './src/reducers';
 
+/**
+ * persistConfig saves the chosen index reducer into async storage
+ */
 const persistConfig = {
   key: 'root',
   storage,
