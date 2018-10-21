@@ -2,20 +2,12 @@
 /**
  * CONSTANT should be upper case, the non uppercase actionTypes will be phased out of the project.
  */
-export const EXIT_SETUP_SCREEN = 'EXIT_SETUP_SCREEN';
-export const SET_APP_PASSWORD = 'SET_APP_PASSWORD';
-export const DEBUG_MODE = 'DEBUG_MODE';
-export const FETCHING_COIN_DATA = 'FETCHING_COIN_DATA';
-export const FETCHING_COIN_DATA_SUCCESS = 'FETCHING_COIN_DATA_SUCCESS';
-export const FETCHING_COIN_DATA_FAIL = 'FETCHING_COIN_DATA_FAIL';
-export const FETCHING_ETH_PRICE_DATA = 'FETCHING_ETH_PRICE_DATA';
-export const FETCHING_ETH_PRICE_DATA_SUCCESS = 'FETCHING_ETH_PRICE_DATA_SUCCESS';
-export const FETCHING_ETH_PRICE_DATA_FAIL = 'FETCHING_ETH_PRICE_DATA_FAIL';
-export const SET_WALLET_TOKENS_BALANCES = 'SET_WALLET_TOKENS_BALANCES';
-export const CALCULATE_WALLET_BALANCE = 'CALCULATE_WALLET_BALANCE';
-export const INITIALIZE_APP_TOKEN_SETUP = 'INITIALIZE_APP_TOKEN_SETUP';
-export const INITIALIZE_NEW_APP_WALLET = 'INITIALIZE_NEW_APP_WALLET';
-export const TEMP_WALLET_NAME = 'TEMP_WALLET_NAME';
+
+
+
+
+
+
 
 
 export const ADD_TOKEN_SETUP = "add_token_setup"; //good
@@ -48,5 +40,5 @@ export const COMPLETE_NEW_TOKEN = 'complete_new_token';
 export const CLEAR_STORE = 'clear_store';
 export const RESET_WALLET_BALANCE = 'reset_wallet_balance';
 export const ADD_TOKEN_FROM_LIST = 'add_token_from_list';
-export const CONFIG_HOT_WALLET = 'CONFIG_HOT_WALLET';
+
 
