@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import { View, TouchableWithoutFeedback, StyleSheet, Text, Keyboard, Dimensions, SafeAreaView } from 'react-native';
+import {
+  View, TouchableWithoutFeedback, StyleSheet, Text, Keyboard, Dimensions, SafeAreaView,
+} from 'react-native';
+import RF from 'react-native-responsive-fontsize';
 import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
-import { FormInput, Card } from 'react-native-elements';
-import * as actions from '../../../actions/AppConfig';
-import LinearButton   from '../../../components/LinearGradient/LinearButton';
+import { FormInput } from 'react-native-elements';
+import * as actions from '../../../actions/actionCreators/AppConfig';
+import LinearButton from '../../../components/LinearGradient/LinearButton';
 import BoxShadowCard from '../../../components/ShadowCards/BoxShadowCard';
 import BackWithMenuNav from '../../../components/customPageNavs/BackWithMenuNav';
-import RF from "react-native-responsive-fontsize"
 
 const ethers = require('ethers');
 
@@ -24,23 +26,20 @@ class PinPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      walletObjecet: {},     
-      password: "",
+      walletObjecet: {},
+      password: '',
       isValidLength: false,
-    }
+    };
   }
 
   /**
  * this.props.isInSetupScreens will be false if the user has not entered the main page and completed
- * the app setup. This will be an indication on whether we are going to be decrypting wallet from the 
+ * the app setup. This will be an indication on whether we are going to be decrypting wallet from the
  * state or will be passed a unencrypted wallet from the previous page.
- * 
  * After the user initializes the app, set isInSetupScreen to false - this will persist
- * 
  * If true -> take wallet from nav param & encrypt with password from state, initiali wallets with this
  *  - setHotWallet with unencrypted wallet, public key in action creator, and wallet name
- *  - set isInSetupScreens to false so we dont repeat this process when app loads again 
- * 
+ *  - set isInSetupScreens to false so we dont repeat this process when app loads again
  * If false -> need to get wallet & decrypt & save to hot wallet
  */
   navigate = async () => {
@@ -222,7 +221,7 @@ const styles = StyleSheet.create({
   defaultGreenColor: {
     color: '#12c1a2',
   },
-})
+});
 
 /**
  * This method is not being used here

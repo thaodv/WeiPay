@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, Dimensions, TouchableWithoutFeedback, Keyboard, SafeAreaView } from 'react-native';
+import {
+  View, StyleSheet, Text, Dimensions, TouchableWithoutFeedback, Keyboard, SafeAreaView,
+} from 'react-native';
+import RF from 'react-native-responsive-fontsize';
 import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 import { FormInput } from 'react-native-elements';
-import { setTempWalletName } from '../../../actions/AppConfig';
+import { setTempWalletName } from '../../../actions/actionCreators/AppConfig';
 import LinearButton from '../../../components/LinearGradient/LinearButton';
 import BackWithMenuNav from '../../../components/customPageNavs/BackWithMenuNav';
 import BoxShadowCard from '../../../components/ShadowCards/BoxShadowCard';
-import RF from "react-native-responsive-fontsize"
+
 
 /**
  * Initial setup screen used to allow the user to give their wallet a name after
@@ -18,7 +21,7 @@ class CreateWalletName extends Component {
      * Method is used to navigate back to the recoverWallet screen.
      */
     navigate = () => {
-      const navigateToPassphrase = NavigationActions.navigate({ 
+      const navigateToPassphrase = NavigationActions.navigate({
         routeName: 'password',
         params: { 'nextScreenToNavigate' : 'mainStack', 'wallet': this.props.navigation.state.params.wallet },
       });
@@ -29,12 +32,12 @@ class CreateWalletName extends Component {
       this.props.setTempWalletName(name);
     }
 
-    render() {     
+    render() {
       return (
         <SafeAreaView style={styles.safeAreaView}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.mainContainer}>
-                <View style={styles.navContainer}>        
+                <View style={styles.navContainer}>
                   <BackWithMenuNav
                       showMenu={false}
                       showBack={true}
@@ -47,7 +50,7 @@ class CreateWalletName extends Component {
                   <View style={styles.contentContainer}>
                       <BoxShadowCard>
                           <Text style={styles.cardText}>
-                              Create a name for your wallet, for example: My Wallet                              
+                              Create a name for your wallet, for example: My Wallet
                           </Text>
                           <View style={styles.formInputContainer}>
                             <FormInput
@@ -71,7 +74,7 @@ class CreateWalletName extends Component {
                             <Text style={styles.textFooter} >Powered by ChainSafe </Text>
                         </View>
                     </View>
-                </View>            
+                </View>
             </View>
           </TouchableWithoutFeedback>
         </SafeAreaView>
@@ -84,7 +87,7 @@ class CreateWalletName extends Component {
  */
 const styles = StyleSheet.create({
   safeAreaView: {
-    flex: 1, 
+    flex: 1,
     backgroundColor: '#fafbfe'
   },
   mainContainer: {
@@ -97,7 +100,7 @@ const styles = StyleSheet.create({
     flex: 0.65,
   },
   boxShadowContainer: {
-    alignItems: 'center', 
+    alignItems: 'center',
     flex: 2.5
   },
   textHeader: {
@@ -106,7 +109,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.8,
     paddingLeft: '9%',
     color: 'black',
-    flex: 0.65, 
+    flex: 0.65,
   },
   contentContainer: {
     width: '82%',
@@ -129,7 +132,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     color: '#12c1a2',
     letterSpacing: 0.4,
-    fontFamily: 'WorkSans-Regular',  
+    fontFamily: 'WorkSans-Regular',
     borderBottomWidth: 0.0001,
   },
   formInputContainer: {
@@ -144,7 +147,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '82%',
-    height: Dimensions.get('window').height * 0.082,  
+    height: Dimensions.get('window').height * 0.082,
   },
   footerGrandparentContainer: {
     alignItems: 'center',

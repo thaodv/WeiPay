@@ -1,44 +1,41 @@
 import React, { Component } from 'react';
-import { View, TouchableWithoutFeedback, StyleSheet, Text, Keyboard, Dimensions, SafeAreaView } from 'react-native';
+import {
+  View, TouchableWithoutFeedback, StyleSheet, Text, Keyboard, Dimensions, SafeAreaView,
+} from 'react-native';
+import RF from 'react-native-responsive-fontsize';
 import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
-import { FormInput, Card } from 'react-native-elements';
-import { setTempWalletName, initializeAppWallet } from '../../../actions/AppConfig';
-import LinearButton   from '../../../components/LinearGradient/LinearButton';
+import { FormInput } from 'react-native-elements';
+import { setTempWalletName, initializeAppWallet } from '../../../actions/actionCreators/AppConfig';
+import LinearButton from '../../../components/LinearGradient/LinearButton';
 import BoxShadowCard from '../../../components/ShadowCards/BoxShadowCard';
 import BackWithMenuNav from '../../../components/customPageNavs/BackWithMenuNav';
-import RF from "react-native-responsive-fontsize"
 
 const ethers = require('ethers');
 
-/**
- * Initial setup screen used to allow the user to give their wallet a name after
- * a new wallet has been created
- */
 class CreateWalletName extends Component {
   /**
-     * A new wallet is created, the wallet name is passed in along with usersWallets, which will be an 
-     * empty array when user initially creates a wallet in setup.
-     */
+  * A new wallet is created, the wallet name is passed in along with usersWallets, which will be an
+  * empty array when user initially creates a wallet in setup.
+  */
+  navigateToPin = () => {
+    const wallet = ethers.Wallet.createRandom();
+    const navigateToPassword = NavigationActions.navigate({
+      routeName: 'password',
+      params: { 'nextScreenToNavigate' : 'generatePassphrase', 'wallet': wallet },
+    });
+    this.props.navigation.dispatch(navigateToPassword);
+  };
 
-    navigateToPin = () => {
-      const wallet = ethers.Wallet.createRandom();
-      const navigateToPassword = NavigationActions.navigate({
-        routeName: 'password',
-        params: { 'nextScreenToNavigate' : 'generatePassphrase', 'wallet': wallet },
-      });
-      this.props.navigation.dispatch(navigateToPassword);
-    };
+  /**
+   * The wallet name is stored in a temporary state.
+   */
+  getWalletName(name) {
+    this.props.setTempWalletName(name);
+  }
 
-    /**
-     * The wallet name is stored in a temporary state.
-     */
-    getWalletName(name) {
-      this.props.setTempWalletName(name);
-    }
-
-    render() {
-      return (
+  render() {
+    return (
         <SafeAreaView style={styles.safeAreaView}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.mainContainer} >
@@ -83,8 +80,8 @@ class CreateWalletName extends Component {
             </View>
           </TouchableWithoutFeedback>
         </SafeAreaView>
-      );
-    }
+    );
+  }
 }
 
 const styles = StyleSheet.create({

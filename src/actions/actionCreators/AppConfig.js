@@ -6,7 +6,7 @@ import {
   DEBUG_MODE,
   SET_APP_PASSWORD,
   CONFIG_HOT_WALLET,
-} from "./ActionTypes";
+} from '../ActionTypes';
 
 
 export function enterDebug() {
@@ -17,8 +17,7 @@ export function enterDebug() {
 }
 
 /**
- * This action is used to track if the user is in the setup screens. 
- * When 
+ * This action is used to track if the user is in the setup screens.
  */
 export function exitSetup(flag) {
   return (dispatch) => {
