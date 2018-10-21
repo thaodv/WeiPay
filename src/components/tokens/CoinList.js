@@ -21,6 +21,8 @@ class CoinList extends Component {
      */
     componentWillMount() {
         let data = this.props.coins
+        console.log(this.props.type );
+        
         if (this.props.type === 'coins') {
             data = this.props.coins.filter(coin => coin.type === 'PortfolioCoin')
         } else if (this.props.type === 'tokens' ) {

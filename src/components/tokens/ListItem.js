@@ -48,11 +48,11 @@ class CoinListItem extends Component {
    * @param {Object} coin
    */
   renderStatePicture(coin) {
-    if (coin.selected == false) {
+    if (coin.selected === false) {
       return require('../../assets/images/add2.png')
-    }else if (this.state.totalTaps == 1 && (coin.selected)) {
+    } else if (this.state.totalTaps == 1 && (coin.selected)) {
       return require('../../assets/images/added.png')
-    }else if (this.state.totalTaps == 2 && coin.selected) {
+    } else if (this.state.totalTaps == 2 && coin.selected) {
       return require('../../assets/images/delete.png')
     }
   }
@@ -192,9 +192,9 @@ const styles = StyleSheet.create({
  * This function is not being used
  * @param {Object} state
  */
-const mapStateToProps = (state) => {
+const mapStateToProps = ({ Wallet }) => {
   return {
-    tokenList: state.newWallet.tokens,
+    tokenList: Wallet.tokens,
   };
 };
 
