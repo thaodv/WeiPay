@@ -53,9 +53,8 @@ export default function (state = initialState, action) {
         ...state, walletTokens: action.payload,
       };
     case coinTypes.CALCULATE_WALLET_BALANCE:
-      return {
-        ...state, walletBalance: action.payloadwalletBalanceObject, tokenBalances: action.payloadindividualTokens,
-      };
+      const { walletBalanceObject, individualTokens } = action.payload;
+      return { ...state, walletBalance: walletBalanceObject, tokenBalances: individualTokens };
     default:
       return state;
   }

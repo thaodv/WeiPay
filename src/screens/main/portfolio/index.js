@@ -67,7 +67,10 @@ class Portfolio extends Component {
   }
 
   balanceCalculations = async () => {
-    const { tokenSymbolString, tokenBalances } = await this.formatTokens(this.state.data);    
+    console.log('in balance calc');
+    const { tokenSymbolString, tokenBalances } = await this.formatTokens(this.state.data);   
+    console.log({ tokenSymbolString, tokenBalances });
+     
     await this.props.fetchCoinData(tokenSymbolString);
     await this.props.calculateWalletBalance(tokenBalances, this.props.tokenConversions); //amount of tokens and symbol -> token balance, conversions -> matrix of prices
     await this.setState({ 
@@ -75,7 +78,6 @@ class Portfolio extends Component {
       walletBalance: this.props.walletBalance,
       tokenPrices: this.props.tokenBalances,
       tokenAmounts: tokenBalances,
-
     });
     this.showTokens();
   }

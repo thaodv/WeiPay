@@ -15,6 +15,7 @@ export function fetchCoinData(tokensString) {
     dispatch({ type: types.FETCHING_COIN_DATA });
     return axios.get(`${apiMultipleCurrencyBaseUrl}${tokensString}${apiMulitpleResponseUrl}`)
       .then((res) => {
+        console.log('in action', res);
         dispatch({ type: types.FETCHING_COIN_DATA_SUCCESS, payload: res.data });
       })
       .catch((err) => {
@@ -37,6 +38,8 @@ export function setWalletTokenBalances(usersTokensWithBalances) {
  * @param {*} tokenConversionMatrix
  */
 export function calculateWalletBalance(tokenBalances, tokenConversionMatrix) {
+  console.log({ tokenBalances, tokenConversionMatrix });
+  
   return (dispatch) => {
     const tokenKeys = Object.keys(tokenConversionMatrix);
     let walletBalanceObject = {
