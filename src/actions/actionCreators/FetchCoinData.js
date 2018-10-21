@@ -1,57 +1,31 @@
 import axios from 'axios';
 
-import { apiBaseUrl, apiCurrencyResponseUrl, apiMultipleCurrencyBaseUrl, apiMulitpleResponseUrl } from '../constants/Api';
-
 import {
-  FETCHING_COIN_DATA,
-  FETCHING_COIN_DATA_SUCCESS,
-  FETCHING_COIN_DATA_FAIL,
-  FETCHING_ETH_PRICE_DATA,
-  FETCHING_ETH_PRICE_DATA_SUCCESS,
-  FETCHING_ETH_PRICE_DATA_FAIL,
-  SET_WALLET_TOKENS_BALANCES,
-  CALCULATE_WALLET_BALANCE,
-} from "./ActionTypes";
+  apiMultipleCurrencyBaseUrl, apiMulitpleResponseUrl,
+} from '../../constants/Api';
+
+import * as types from '../actionTypes/FetchCoinDataTypes';
 
 /**
  * Pass in Array of symbol and amount of tokens
- * @param {} symbol 
+ * @param {} symbol
  */
 export function fetchCoinData(tokensString) {
   return (dispatch) => {
-    dispatch({ type: FETCHING_COIN_DATA });
+    dispatch({ type: types.FETCHING_COIN_DATA });
     return axios.get(`${apiMultipleCurrencyBaseUrl}${tokensString}${apiMulitpleResponseUrl}`)
       .then((res) => {
-        dispatch({ type: FETCHING_COIN_DATA_SUCCESS, payload: res.data });
+        dispatch({ type: types.FETCHING_COIN_DATA_SUCCESS, payload: res.data });
       })
       .catch((err) => {
-        dispatch({ type: FETCHING_COIN_DATA_FAIL, payload: err.data });
-      });
-  };
-}
-
-/**
- * Called when app initially Loads to save current prices in store for when needed.
- * The app initially defaults all newly created or recovered wallets to ETH upon setup completition.
- * Once the a wallet is recovered, the wallet balance can calculated instantly without any additional api requests.
- * This removes the intial API call when the main app screen loads/when the flatlist needs an initial refresh.
- */
-export function FetchEthPriceData() {
-  return (dispatch) => {
-    dispatch({ type: FETCHING_ETH_PRICE_DATA });
-    return axios.get(`${apiBaseUrl}ETH${apiCurrencyResponseUrl}`)
-      .then((res) => {
-        dispatch({ type: FETCHING_ETH_PRICE_DATA_SUCCESS, payload: res.data });
-      })
-      .catch((err) => {
-        dispatch({ type: FETCHING_ETH_PRICE_DATA_FAIL, payload: err.data });
+        dispatch({ type: types.FETCHING_COIN_DATA_FAIL, payload: err.data });
       });
   };
 }
 
 export function setWalletTokenBalances(usersTokensWithBalances) {
   return (dispatch) => {
-    dispatch({ type: SET_WALLET_TOKENS_BALANCES, payload: usersTokensWithBalances });
+    dispatch({ type: types.SET_WALLET_TOKENS_BALANCES, payload: usersTokensWithBalances });
   };
 }
 
@@ -59,8 +33,8 @@ export function setWalletTokenBalances(usersTokensWithBalances) {
  * Loop through the amount of tokens the user has
  * Loop through all the conversions
  * Create a total balance object that has all 5 currencies
- * @param {} tokenBalances 
- * @param {*} tokenConversionMatrix 
+ * @param {} tokenBalances
+ * @param {*} tokenConversionMatrix
  */
 export function calculateWalletBalance(tokenBalances, tokenConversionMatrix) {
   return (dispatch) => {
@@ -74,7 +48,7 @@ export function calculateWalletBalance(tokenBalances, tokenConversionMatrix) {
     };
     let individualTokens = [];
     for (let i = 0; i < tokenBalances.length; i++) {
-      const currentTokenKey = tokenKeys[i];     
+      const currentTokenKey = tokenKeys[i];
       let tokenPriceObject = {
         USD: 0,
         CAD: 0,
@@ -91,9 +65,9 @@ export function calculateWalletBalance(tokenBalances, tokenConversionMatrix) {
       tokenPriceObject.CAD = tokenBalances[i].amount * tokenConversionMatrix[currentTokenKey].CAD;
       tokenPriceObject.EUR = tokenBalances[i].amount * tokenConversionMatrix[currentTokenKey].EUR;
       tokenPriceObject.BTC = tokenBalances[i].amount * tokenConversionMatrix[currentTokenKey].BTC;
-      tokenPriceObject.ETH = tokenBalances[i].amount * tokenConversionMatrix[currentTokenKey].ETH;      
+      tokenPriceObject.ETH = tokenBalances[i].amount * tokenConversionMatrix[currentTokenKey].ETH;
       individualTokens.push(tokenPriceObject);
     }
-    dispatch({ type: CALCULATE_WALLET_BALANCE, payload: { walletBalanceObject, individualTokens }});
+    dispatch({ type: types.CALCULATE_WALLET_BALANCE, payload: { walletBalanceObject, individualTokens } });
   };
 }

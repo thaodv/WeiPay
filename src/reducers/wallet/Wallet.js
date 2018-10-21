@@ -1,21 +1,9 @@
-import {
-  EXIT_SETUP_SCREEN,
-  INITIALIZE_APP_TOKEN_SETUP,
-  TEMP_WALLET_NAME,
-  INITIALIZE_NEW_APP_WALLET,
-  FETCHING_COIN_DATA,
-  FETCHING_COIN_DATA_SUCCESS,
-  FETCHING_COIN_DATA_FAIL,
-  FETCHING_ETH_PRICE_DATA,
-  FETCHING_ETH_PRICE_DATA_SUCCESS,
-  FETCHING_ETH_PRICE_DATA_FAIL,
-  SET_WALLET_TOKENS_BALANCES,
-  CALCULATE_WALLET_BALANCE,
-} from '../../actions/ActionTypes';
+import * as appTypes from '../../actions/actionTypes/AppConfigTypes';
+import * as coinTypes from '../../actions/actionTypes/FetchCoinDataTypes';
 
 const initialState = {
   isInSetupScreens: true,
-  wallets: [], //Contains all the encrypted HD Wallet
+  wallets: [],
   tempWalletName: null,
   tokens: [],
   walletBalance: null,
@@ -31,52 +19,43 @@ const initialState = {
 
 export default function (state = initialState, action) {
   switch (action.type) {
-    case EXIT_SETUP_SCREEN:
-    return {
-      ...state, isInSetupScreens: action.payload,
-    };
-    case INITIALIZE_APP_TOKEN_SETUP:
+    case appTypes.EXIT_SETUP_SCREEN:
+      return {
+        ...state, isInSetupScreens: action.payload,
+      };
+    case appTypes.INITIALIZE_APP_TOKEN_SETUP:
       return {
         ...state,
         tokens: action.payload,
       };
-    case TEMP_WALLET_NAME:
+    case appTypes.TEMP_WALLET_NAME:
       return {
         ...state, tempWalletName: action.payload,
       };
-    case INITIALIZE_NEW_APP_WALLET:
+    case appTypes.INITIALIZE_NEW_APP_WALLET:
       return {
         ...state, wallets: action.payload,
       };
-    case FETCHING_COIN_DATA:
+    case coinTypes.FETCHING_COIN_DATA:
       return {
         ...state, isFetching: true, hasError: false, errorMessage: null,
       };
-    case FETCHING_COIN_DATA_SUCCESS:
+    case coinTypes.FETCHING_COIN_DATA_SUCCESS:
       return {
         ...state, isFetching: false, hasError: false, errorMessage: null, tokenConversions: action.payload,
       };
-    case FETCHING_COIN_DATA_FAIL:
+    case coinTypes.FETCHING_COIN_DATA_FAIL:
       return {
         ...state, isFetching: false, hasError: true, errorMessage: action.err,
       };
-    case FETCHING_ETH_PRICE_DATA:
+    case coinTypes.SET_WALLET_TOKENS_BALANCES:
       return {
-        ...state, isFetching: true, data: null, hasError: false, errorMessage: null,
+        ...state, walletTokens: action.payload,
       };
-    case FETCHING_ETH_PRICE_DATA_SUCCESS:
+    case coinTypes.CALCULATE_WALLET_BALANCE:
       return {
-        ...state, intialRelativeEthConversions: action.payload,
+        ...state, walletBalance: action.payloadwalletBalanceObject, tokenBalances: action.payloadindividualTokens,
       };
-    case FETCHING_ETH_PRICE_DATA_FAIL:
-      return {
-        ...state, isFetching: false, hasError: true, errorMessage: action.err,
-      };
-    case SET_WALLET_TOKENS_BALANCES:
-      return { ...state, walletTokens: action.payload };
-    case CALCULATE_WALLET_BALANCE:
-      const { walletBalanceObject, individualTokens } = action.payload;
-      return { ...state, walletBalance: walletBalanceObject, tokenBalances: individualTokens };
     default:
       return state;
   }

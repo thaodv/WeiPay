@@ -1,18 +1,9 @@
-import {
-  EXIT_SETUP_SCREEN,
-  INITIALIZE_APP_TOKEN_SETUP,
-  INITIALIZE_NEW_APP_WALLET,
-  TEMP_WALLET_NAME,
-  DEBUG_MODE,
-  SET_APP_PASSWORD,
-  CONFIG_HOT_WALLET,
-} from '../ActionTypes';
-
+import * as types from '../actionTypes/AppConfigTypes';
 
 export function enterDebug() {
-  let testData = { 'walletName': 'My Test Wallet Name' };
+  const testData = { walletName: 'My Test Wallet Name' };
   return (dispatch) => {
-    dispatch({ type: DEBUG_MODE, payload: testData });
+    dispatch({ type: types.DEBUG_MODE, payload: testData });
   };
 }
 
@@ -21,7 +12,7 @@ export function enterDebug() {
  */
 export function exitSetup(flag) {
   return (dispatch) => {
-    dispatch({ type: EXIT_SETUP_SCREEN, payload: flag });
+    dispatch({ type: types.EXIT_SETUP_SCREEN, payload: flag });
   };
 }
 
@@ -30,7 +21,7 @@ export function exitSetup(flag) {
  */
 export function initializeAppTokenState(initTokenData) {
   return (dispatch) => {
-    dispatch({ type: INITIALIZE_APP_TOKEN_SETUP, payload: initTokenData });
+    dispatch({ type: types.INITIALIZE_APP_TOKEN_SETUP, payload: initTokenData });
   };
 }
 
@@ -39,7 +30,7 @@ export function initializeAppTokenState(initTokenData) {
  */
 export function setTempWalletName(walletName) {
   return (dispatch) => {
-    dispatch({ type: TEMP_WALLET_NAME, payload: walletName });
+    dispatch({ type: types.TEMP_WALLET_NAME, payload: walletName });
   };
 }
 
@@ -64,7 +55,7 @@ export function initializeAppWallet(currentWallet, walletName, previousWalletSta
   walletObject.publicKey = currentWallet.address;
   appWallets.push(walletObject);
   return (dispatch) => {
-    dispatch({ type: INITIALIZE_NEW_APP_WALLET, payload: appWallets });
+    dispatch({ type: types.INITIALIZE_NEW_APP_WALLET, payload: appWallets });
   };
 }
 
@@ -73,18 +64,14 @@ export function initializeAppWallet(currentWallet, walletName, previousWalletSta
  */
 export function setWalletPassword(password) {
   return (dispatch) => {
-    dispatch({ type: SET_APP_PASSWORD, payload: password });
+    dispatch({ type: types.SET_APP_PASSWORD, payload: password });
   };
 }
 
 export function setHotWallet(walletObj) {
   const { name, wallet } = walletObj;
   const pKey = wallet.address;
-
-  return(dispatch) => {
-    dispatch({ type: CONFIG_HOT_WALLET, payload: { 'wallet': wallet, 'publicKey': pKey,'name': name} });
+  return (dispatch) => {
+    dispatch({ type: types.CONFIG_HOT_WALLET, payload: { wallet, publicKey: pKey, name } });
   };
 }
-
-
-
