@@ -17,8 +17,8 @@ import {
   executePayableNoParams,
   executePayableWithParams,
 } from '../../../scripts/contracts/contractValidation';
-import LinearButton from '../../../components/linearGradient/LinearButton';
-import ClearButton from '../../../components/linearGradient/ClearButton';
+import LinearButton from '../../../components/LinearGradient/LinearButton';
+import ClearButton from '../../../components/LinearGradient/ClearButton';
 
 /**
  * Screen is used to display the passphrase (mnemonic) of the wallet

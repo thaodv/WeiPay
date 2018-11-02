@@ -7,8 +7,8 @@ import { connect } from 'react-redux';
 import RF from 'react-native-responsive-fontsize';
 import { FormInput } from 'react-native-elements';
 import * as actions from '../../../actions/AppConfig';
-import LinearButton from '../../../components/linearGradient/LinearButton';
-import ClearButton from '../../../components/linearGradient/ClearButton';
+import LinearButton from '../../../components/LinearGradient/LinearButton';
+import ClearButton from '../../../components/LinearGradient/ClearButton';
 import BoxShadowCard from '../../../components/shadowCards/BoxShadowCard';
 import BackWithMenuNav from '../../../components/customPageNavs/BackWithMenuNav';
 

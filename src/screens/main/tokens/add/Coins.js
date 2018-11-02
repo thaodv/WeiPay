@@ -6,7 +6,7 @@ import RF from 'react-native-responsive-fontsize';
 import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 import CoinList from '../../../../components/tokens/CoinList';
-import LinearButton from '../../../../components/linearGradient/LinearButton';
+import LinearButton from '../../../../components/LinearGradient/LinearButton';
 
 class Coins extends Component {
   /**

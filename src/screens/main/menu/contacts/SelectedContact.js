@@ -8,8 +8,8 @@ import { NavigationActions } from 'react-navigation';
 import RF from 'react-native-responsive-fontsize';
 import * as actions from '../../../../actions/ActionCreator';
 import BoxShadowCard from '../../../../components/shadowCards/BoxShadowCard';
-import LinearButton from '../../../../components/linearGradient/LinearButton';
-import ClearButton from '../../../../components/linearGradient/ClearButton';
+import LinearButton from '../../../../components/LinearGradient/LinearButton';
+import ClearButton from '../../../../components/LinearGradient/ClearButton';
 import EditContact from './add/EditContact';
 
 

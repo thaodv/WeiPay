@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import RF from 'react-native-responsive-fontsize';
 import BackWithMenuNav from '../../../../components/customPageNavs/BackWithMenuNav';
 import BoxShadowCard from '../../../../components/shadowCards/BoxShadowCard';
-import LinearButton from '../../../../components/linearGradient/LinearButton';
+import LinearButton from '../../../../components/LinearGradient/LinearButton';
 
 const ethers = require('ethers');
 

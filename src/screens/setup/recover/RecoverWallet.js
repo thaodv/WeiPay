@@ -8,7 +8,7 @@ import { FormInput } from 'react-native-elements';
 import RF from 'react-native-responsive-fontsize';
 import { initializeAppWallet } from '../../../actions/AppConfig';
 import provider from '../../../constants/Providers';
-import LinearButton from '../../../components/linearGradient/LinearButton';
+import LinearButton from '../../../components/LinearGradient/LinearButton';
 import BackWithMenuNav from '../../../components/customPageNavs/BackWithMenuNav';
 import BoxShadowCard from '../../../components/shadowCards/BoxShadowCard';
 

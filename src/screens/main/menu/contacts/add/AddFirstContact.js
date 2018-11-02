@@ -3,7 +3,7 @@ import {
   Text, View, StyleSheet, Dimensions,
 } from 'react-native';
 import RF from 'react-native-responsive-fontsize';
-import LinearButton from '../../../../../components/linearGradient/LinearButton';
+import LinearButton from '../../../../../components/LinearGradient/LinearButton';
 import BoxShadowCard from '../../../../../components/shadowCards/BoxShadowCard';
 
 

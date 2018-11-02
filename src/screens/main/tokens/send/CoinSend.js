@@ -9,8 +9,8 @@ import RF from 'react-native-responsive-fontsize';
 import * as action from '../../../../actions/ActionCreator';
 import provider from '../../../../constants/Providers';
 import ERC20ABI from '../../../../constants/data/json/ERC20ABI.json';
-import LinearButton from '../../../../components/linearGradient/LinearButton';
-import ClearButton from '../../../../components/linearGradient/ClearButton';
+import LinearButton from '../../../../components/LinearGradient/LinearButton';
+import ClearButton from '../../../../components/LinearGradient/ClearButton';
 import BoxShadowCard from '../../../../components/shadowCards/BoxShadowCard';
 import MaliciousAddresses from '../../../../constants/data/json/addresses_darklist.json';
 

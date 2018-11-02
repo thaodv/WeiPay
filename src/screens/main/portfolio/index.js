@@ -5,7 +5,7 @@ import {
 import { connect } from 'react-redux';
 import RF from 'react-native-responsive-fontsize';
 import { NavigationActions } from 'react-navigation';
-import LinearButton from '../../../components/linearGradient/LinearButton';
+import LinearButton from '../../../components/LinearGradient/LinearButton';
 import { setWalletTokenBalances, fetchCoinData, calculateWalletBalance } from '../../../actions/FetchCoinData';
 import { saveTokenDataForTransaction, saveAllTokenQuantities } from '../../../actions/AppConfig';
 import processAllTokenBalances from '../../../scripts/tokens/tokenBalances';

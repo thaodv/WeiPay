@@ -7,7 +7,9 @@ import { connect } from 'react-redux';
 import { NavigationActions } from 'react-navigation';
 import { initializeAppTokenState, enterDebug } from '../../../actions/AppConfig';
 import { Terms } from '../../../constants/data/Terms';
-import LinearButton from '../../../components/linearGradient/LinearButton';
+//import LinearButton from '../../../components/linearGradient/LinearButton';
+import LinearButton from '../../../components/LinearGradient/LinearButton';
+
 import TokenConfig from '../../../scripts/tokens/tokenConfig';
 
 class TermsAndConditions extends Component {

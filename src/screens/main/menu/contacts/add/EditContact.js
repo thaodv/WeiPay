@@ -8,7 +8,7 @@ import { NavigationActions } from 'react-navigation';
 import RNPickerSelect from 'react-native-picker-select';
 import RF from 'react-native-responsive-fontsize';
 import * as actions from '../../../../../actions/ActionCreator';
-import LinearButton from '../../../../../components/linearGradient/LinearButton';
+import LinearButton from '../../../../../components/LinearGradient/LinearButton';
 import BoxShadowCard from '../../../../../components/shadowCards/BoxShadowCard';
 
 

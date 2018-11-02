@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { FormInput } from 'react-native-elements';
 import RF from 'react-native-responsive-fontsize';
 import { setTempWalletName, initializeAppWallet } from '../../../actions/AppConfig';
-import LinearButton from '../../../components/linearGradient/LinearButton';
+import LinearButton from '../../../components/LinearGradient/LinearButton';
 import BoxShadowCard from '../../../components/shadowCards/BoxShadowCard';
 import BackWithMenuNav from '../../../components/customPageNavs/BackWithMenuNav';
 

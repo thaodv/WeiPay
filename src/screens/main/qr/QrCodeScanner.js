@@ -9,7 +9,7 @@ import Toast from 'react-native-simple-toast';
 import RF from 'react-native-responsive-fontsize';
 
 import * as actions from '../../../actions/ActionCreator';
-import LinearButton from '../../../components/linearGradient/LinearButton';
+import LinearButton from '../../../components/LinearGradient/LinearButton';
 // import { getQRCodeData } from '../../../actions/ActionCreator';
 // import { updateSavedContactInputs } from '../../../actions/ActionCreator';
 // import ContactAddresses from '../menu/contacts/SelectedContact';

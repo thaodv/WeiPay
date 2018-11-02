@@ -9,7 +9,7 @@ import RF from 'react-native-responsive-fontsize';
 import TokenConfig from '../../../../scripts/tokens/tokenConfig';
 import { qrScannerInvoker } from '../../../../actions/ActionCreator';
 import { addNewToken } from '../../../../actions/AppConfig';
-import LinearButton from '../../../../components/linearGradient/LinearButton';
+import LinearButton from '../../../../components/LinearGradient/LinearButton';
 import BoxShadowCard from '../../../../components/shadowCards/BoxShadowCard';
 
 class NewToken extends Component {

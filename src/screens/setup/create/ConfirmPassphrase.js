@@ -5,8 +5,8 @@ import {
 import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 import RF from 'react-native-responsive-fontsize';
-import LinearButton from '../../../components/linearGradient/LinearButton';
-import ClearButton from '../../../components/linearGradient/ClearButton';
+import LinearButton from '../../../components/LinearGradient/LinearButton';
+import ClearButton from '../../../components/LinearGradient/ClearButton';
 import BackWithMenuNav from '../../../components/customPageNavs/BackWithMenuNav';
 import BoxShadowCard from '../../../components/shadowCards/BoxShadowCard';
 
