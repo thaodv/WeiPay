@@ -6,22 +6,25 @@ import GeneratePassphrase from '../../screens/setup/create/GeneratePassphrase';
 import ConfirmPassphrase from '../../screens/setup/create/ConfirmPassphrase';
 import CreateWalletNameRecovered from '../../screens/setup/recover/CreateWalletName';
 import RecoverWallet from '../../screens/setup/recover/RecoverWallet';
-import EnableTokens from '../../screens/setup/crypto/EnableTokens';
 import mainBucketNavigation from './mainBucketStack';
 import addContact from '../../screens/main/menu/contacts/add/AddContact';
 import contacts from '../../screens/main/menu/contacts/index';
-import ContactAddresses from '../../screens/main/menu/contacts/SelectedContact';
-import Splash from '../../screens/Splash'
+import Splash from '../../screens/Splash';
+import PinPage from '../../screens/setup/terms/PinPage';
+
 /**
  * Constant contains all the screens that can be navigated to using the
  * navigate method from any class
  */
 const navigator = StackNavigator({
   splash: {
-    screen: Splash
+    screen: Splash,
   },
   terms: {
     screen: TermsScreen,
+  },
+  password: {
+    screen: PinPage,
   },
   addContact: {
     screen: addContact,
@@ -47,9 +50,6 @@ const navigator = StackNavigator({
   recoverWallet: {
     screen: RecoverWallet,
   },
-  enableTokens: {
-    screen: EnableTokens,
-  },
   mainStack: {
     screen: mainBucketNavigation,
   },
@@ -58,6 +58,7 @@ const navigator = StackNavigator({
   navigationOptions: {
     backgroundColor: '#fafbfe',
     borderBottomWidth: 0,
+    gesturesEnabled: false,
   },
   lazy: true,
 });

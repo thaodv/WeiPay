@@ -7,9 +7,9 @@ import { NavigationActions } from 'react-navigation';
 
 import RF from 'react-native-responsive-fontsize';
 import * as actions from '../../../../actions/ActionCreator';
-import BoxShadowCard from '../../../../components/ShadowCards/BoxShadowCard';
-import LinearButton from '../../../../components/LinearGradient/LinearButton';
-import ClearButton from '../../../../components/LinearGradient/ClearButton';
+import BoxShadowCard from '../../../../components/shadowCards/BoxShadowCard';
+import LinearButton from '../../../../components/linearGradient/LinearButton';
+import ClearButton from '../../../../components/linearGradient/ClearButton';
 import EditContact from './add/EditContact';
 
 
@@ -40,31 +40,28 @@ class ContactAddresses extends Component {
     }
     this.props.getQRCodeData(address);
     this.props.saveDataForCoinSend(address);
-    const navigateToCreateOrRestore = NavigationActions.navigate({
+    const navigateToTokenFunctionality = NavigationActions.navigate({
       routeName: 'TokenFunctionality',
     });
-    this.props.navigation.dispatch(navigateToCreateOrRestore);
+    this.props.navigation.dispatch(navigateToTokenFunctionality);
   };
 
   navigateToEditContact = () => {
-    const navigateToCreateOrRestore = NavigationActions.navigate({
+    const navigateToEditContact = NavigationActions.navigate({
       routeName: 'editContact',
       params: { contact: this.props.contact },
     });
-    this.props.navigation.dispatch(navigateToCreateOrRestore);
+    this.props.navigation.dispatch(navigateToEditContact);
   };
 
   renderRow(address) {
     const contactInfo = this.props.contact.images;
     let url;
-
     for (const key in contactInfo) {
       if (contactInfo.hasOwnProperty(key)) {
-
         if (key == Object.keys(address)[0]) {
           url = contactInfo[key];
         }
-
       }
     }
 

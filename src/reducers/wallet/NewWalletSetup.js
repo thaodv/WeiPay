@@ -1,6 +1,7 @@
 import { AsyncStorage } from 'react-native';
 import * as actions from '../../actions/ActionTypes';
 import data from '../../constants/data/json/coins.json';
+import tokenData from '../../constants/data/json/tokens.json';
 
 const INITIAL_STATE = {
   newWallet: false,
@@ -12,17 +13,55 @@ const INITIAL_STATE = {
     cadWalletBalance: 0,
     usdWalletBalance: 0,
   },
-  tokens: [],
+  tokens: [
+    {
+      "id": 0,
+      "type": "PortfolioCoin",
+      "selected": true,
+      "symbol": "ETH",
+      "address": "",
+      "decimals": 18,
+      "name": "Ethereum",
+      "ens_address": "",
+      "website": "",
+      "logo": {
+          "src": "https://pbs.twimg.com/profile_images/626149701189042177/LWpxKEv3_bigger.png",
+          "width": "",
+          "height": "",
+          "ipfs_hash": ""
+      },
+      "support": {
+          "email": "",
+          "url": ""
+      },
+      "social": {
+          "blog": "",
+          "chat": "",
+          "facebook": "",
+          "forum": "",
+          "github": "",
+          "gitter": "",
+          "instagram": "",
+          "linkedin": "",
+          "reddit": "",
+          "slack": "",
+          "telegram": "",
+          "twitter": "",
+          "youtube": ""
+      }
+    },
+  ],
+  cachedImageUrls: [],
   wallet: null,
   backupPassphrase: '',
   coinData: data,
   QrData: '',
   QrScannerInvoker: '',
   current_token: {},
-  debugMode: false,
   txnFee: 0,
   newTokenName: '',
   newTokenAddress: '',
+  allTokens: tokenData[0],
 };
 
 /**
@@ -38,21 +77,8 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, newWallet: true, wallet: action.payload };
     case actions.NEW_WALLET_NAME:
       return { ...state, walletName: action.payload };
-    case actions.ADD_TOKEN_SETUP:
-      const current = state.tokens;
-      const selectedToken = { ...action.payload, balance: 0}
-      let newTokens = [];
-      const index = current.map(token => token.id).indexOf(action.payload.id);
-      if (index === -1) {      
-        newTokens = [...current, selectedToken];
-      } else { 
-        newTokens = [...current.slice(0, index), ...current.slice(index + 1)];     
-      }
-      return { ...state, tokens: newTokens };
     case actions.ADD_TOKEN_INFO:
       return { ...state, current_token: action.payload };
-    case actions.DEBUG_MODE:
-      return { ...state, debugMode: true };
     case actions.UPDATE_TOKEN_BALANCE:      
       const token = state.tokens[action.payload.tokenID];
       const updatedToken = { 
@@ -88,7 +114,7 @@ export default (state = INITIAL_STATE, action) => {
     case actions.ADD_NEW_TOKEN_NAME:
       return { ...state, newTokenName: action.payload };
     case actions.COMPLETE_NEW_TOKEN:
-      let lastID = state.tokens[state.tokens.length - 1].id + 1     
+      let lastID = state.coinData[state.coinData.length - 1].id + 1
       const coinObj = {
         "id": lastID,
         "type": "ERC20",
@@ -99,6 +125,7 @@ export default (state = INITIAL_STATE, action) => {
         "name": state.newTokenName,
         "ens_address": "",
         "website": "",
+        "balance": 0,
         "logo": {
           "src": "https://etherscan.io/token/images/binance_28.png",
           "width": 28,
@@ -127,13 +154,68 @@ export default (state = INITIAL_STATE, action) => {
       }
       const oldTokens = state.tokens
       oldTokens.push(coinObj);
-
       const oldcoinData = state.coinData
       oldcoinData.push(coinObj);    
-      
       return { ...state, coinData: oldcoinData, tokens: oldTokens, newTokenAddress: '', newTokenName: '' };
-
+    case actions.ADD_TOKEN_FROM_LIST:
+      let lastIDcheck = state.coinData[state.coinData.length - 1].id + 1;
+      const NewcoinObj = {
+        "id": lastIDcheck,
+        "type": "ERC20",
+        "selected": true,
+        "symbol": action.payload.symbol,
+        "address": action.payload.add,
+        "decimals": 18,
+        "name": action.payload.name,
+        "ens_address": "",
+        "website": "",
+        "balance": 0,
+        "logo": {
+          "src": "https://etherscan.io/token/images/binance_28.png",
+          "width": 28,
+          "height": 28,
+          "ipfs_hash": ""
+        },
+        "support": {
+            "email": "",
+            "url": ""
+        },
+        "social": {
+            "blog": "",
+            "chat": "",
+            "facebook": "",
+            "forum": "",
+            "github": "",
+            "gitter": "",
+            "instagram": "",
+            "linkedin": "",
+            "reddit": "",
+            "slack": "",
+            "telegram": "",
+            "twitter": "",
+            "youtube": ""
+        }
+      }
+      const OldTokens = state.tokens
+      OldTokens.push(NewcoinObj);
+      const OldcoinData = state.coinData
+      OldcoinData.push(NewcoinObj); 
+      return { ...state, coinData: OldcoinData, tokens: OldTokens };
     default:
       return state;
   }
 };
+
+/*
+case actions.ADD_TOKEN_SETUP:
+      const current = state.tokens;
+      const selectedToken = { ...action.payload, balance: 0}
+      let newTokens = [];
+      const index = current.map(token => token.id).indexOf(action.payload.id);
+      if (index === -1) {      
+        newTokens = [...current, selectedToken];
+      } else { 
+        newTokens = [...current.slice(0, index), ...current.slice(index + 1)];     
+      }
+      return { ...state, tokens: newTokens };
+      */

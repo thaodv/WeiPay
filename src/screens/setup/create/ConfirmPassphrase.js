@@ -1,27 +1,19 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Dimensions, SafeAreaView, Alert } from 'react-native';
+import {
+  View, TouchableOpacity, Text, StyleSheet, Dimensions, SafeAreaView, Alert,
+} from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
-import LinearButton from '../../../components/LinearGradient/LinearButton';
-import ClearButton from '../../../components/LinearGradient/ClearButton';
+import RF from 'react-native-responsive-fontsize';
+import LinearButton from '../../../components/linearGradient/LinearButton';
+import ClearButton from '../../../components/linearGradient/ClearButton';
 import BackWithMenuNav from '../../../components/customPageNavs/BackWithMenuNav';
-import BoxShadowCard from '../../../components/ShadowCards/BoxShadowCard'
-import RF from "react-native-responsive-fontsize"
+import BoxShadowCard from '../../../components/shadowCards/BoxShadowCard';
+
 
 const shuffle = require('shuffle-array');
 
-/**
- * Initial setup screen that prompts the user to re-enter the passphrase(mnemonic) using the
- * tags.
- * This screen is only displayed in the process of creating a new wallet
- */
 class ConfirmPassphrase extends Component {
-  /**
-   * Sets the local state to keep track of the tags which are selected and
-   * unselected
-   * @param {Object} props
-   */
-
   constructor(props) {
     super(props);
     this.state = {
@@ -36,7 +28,7 @@ class ConfirmPassphrase extends Component {
     * This method add each word of the mnemonic to the local state variable object
     */
   componentDidMount() {
-    const words = this.props.mnemonic.split(' ');
+    const words = this.props.hotWallet.wallet.mnemonic.split(' ');
     let orderArray = [];
     for (let i = 0; i < words.length; i++) {
       orderArray.push({ 'wordItem' : { 'word': words[i], 'index': i }, 'selected': false });
@@ -49,10 +41,10 @@ class ConfirmPassphrase extends Component {
      * Method is used to navigate to the "enableTokens" screen.
      */
     navigate = () => {
-      const navigateToEnableTokens = NavigationActions.navigate({
-        routeName: 'enableTokens',
+      const navigateToMain = NavigationActions.navigate({
+        routeName: 'mainStack',
       });
-      this.props.navigation.dispatch(navigateToEnableTokens);
+      this.props.navigation.dispatch(navigateToMain);
     };
 
     /**
@@ -129,6 +121,7 @@ class ConfirmPassphrase extends Component {
               <BackWithMenuNav
                 showMenu={false}
                 showBack={true}
+                showSkip={true}
                 navigation={this.props.navigation}
                 backPage={'generatePassphrase'}
               />
@@ -294,15 +287,9 @@ const styles = StyleSheet.create({
   },
 });
 
-/**
- * Reterives the mnemonic passphrase of the wallet that was created
- * and returns an object containing that information
- * @param {Object} param
- */
-const mapStateToProps = ({ newWallet }) => {
-  const mnemonic = newWallet.wallet.mnemonic;
-  const debugMode = newWallet.debugMode;
-  return { mnemonic, debugMode }
-}
+const mapStateToProps = ({ HotWallet }) => {
+  const { hotWallet } = HotWallet;
+  return { hotWallet };
+};
 
 export default connect(mapStateToProps, null)(ConfirmPassphrase)

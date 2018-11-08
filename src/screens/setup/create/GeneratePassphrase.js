@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Dimensions, SafeAreaView } from 'react-native';
+import {
+  View, Text, StyleSheet, Dimensions, SafeAreaView,
+} from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
-import LinearButton from '../../../components/LinearGradient/LinearButton';
+import RF from 'react-native-responsive-fontsize';
+import LinearButton from '../../../components/linearGradient/LinearButton';
 import BackWithMenuNav from '../../../components/customPageNavs/BackWithMenuNav';
-import BoxShadowCard from '../../../components/ShadowCards/BoxShadowCard'
-import RF from "react-native-responsive-fontsize"
+import BoxShadowCard from '../../../components/shadowCards/BoxShadowCard'
 
 /**
  * Screen used to display the passphrase (mnemonic)
@@ -13,16 +15,13 @@ import RF from "react-native-responsive-fontsize"
 class GeneratePassphrase extends Component {
 
     navigate = () => {
-      const navigateToEnableTokens = NavigationActions.navigate({
-        routeName: 'confirmPassphrase',
-        params: { wallet: this.props.navigation.state.wallet },
+      const navigateToConfirmPassphrase = NavigationActions.navigate({
+        routeName: 'confirmPassphrase',     
       });
-      this.props.navigation.dispatch(navigateToEnableTokens);
+      this.props.navigation.dispatch(navigateToConfirmPassphrase);
     };
 
-    render() {
-      const { walletInfo } = this.props;
-      
+    render() {      
       return (
         <SafeAreaView style={styles.safeAreaView}>
           <View style={styles.mainContainer}>
@@ -30,6 +29,7 @@ class GeneratePassphrase extends Component {
               <BackWithMenuNav
                   showMenu={false}
                   showBack={true}
+                  showSkip={true}
                   navigation={this.props.navigation}
                   backPage={'createWalletName'}
                 />
@@ -42,8 +42,8 @@ class GeneratePassphrase extends Component {
                             Please write down your 12 word passphrase. You will need it to verify your wallet.
                         </Text>
                         <Text style={styles.textMnemonic}>
-                            {walletInfo.wallet.mnemonic}
-                        </Text>
+                            {this.props.hotWallet.wallet.mnemonic}
+                        </Text>                       
                       </BoxShadowCard>
                   </View>
               </View>
@@ -137,8 +137,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ newWallet }) => {
-  return { walletInfo: newWallet };
+const mapStateToProps = ({ HotWallet }) => {
+  const { hotWallet } = HotWallet;
+  return { hotWallet };
 };
 
 export default connect(mapStateToProps, null)(GeneratePassphrase);

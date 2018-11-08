@@ -5,10 +5,16 @@ import * as actionTypes from './ActionTypes';
  * returns a dispatch => which invokes all the reducers to handle this action
  * @param {String} coin
  */
-export function addTokenToSetup(coin) {
+export function addTokenToSetup(coin, tokenList) {
   return (dispatch) => {
     coin.selected = !coin.selected;
-    dispatch({ type: actionTypes.ADD_TOKEN_SETUP, payload: coin });
+    var i = 0;
+    while (tokenList[i] != coin) {
+      i++;
+    }
+    tokenList[i] = coin;
+    const newTokens = [...tokenList];
+    dispatch({ type: actionTypes.ADD_TOKEN_SETUP, payload: newTokens });
   };
 }
 
@@ -187,12 +193,6 @@ export function addTokenInfo(tokenInfo) {
   };
 }
 
-export function enterDebug() {
-  return (dispatch) => {
-    dispatch({ type: actionTypes.DEBUG_MODE, payload: '' });
-  };
-}
-
 /**
  * Returns an action that contains the tokenID from the token data with its
  * updated balance (received through the provider)
@@ -249,5 +249,12 @@ export function completeNewToken() {
 }
 
 export function clearStore() {
-  return { type: actionTypes.CLEAR_STORE }
+  return { type: actionTypes.CLEAR_STORE };
+}
+
+export function addTokenFromList(tokenname, tokenSym, tokenAdd) {
+  const loads = { name: tokenname, symbol: tokenSym, add: tokenAdd };
+  return (dispatch) => {
+    dispatch({ type: actionTypes.ADD_TOKEN_FROM_LIST, payload: loads });
+  };
 }

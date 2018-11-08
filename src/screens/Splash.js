@@ -1,38 +1,34 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, StyleSheet, Dimensions, SafeAreaView } from 'react-native';
+import { View } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
+import * as actions from '../actions/AppConfig';
 
 class Splash extends Component {
+  componentDidMount() {
+    this.checkLoggedIn();
+  }
 
-    componentDidMount() {
-        this.checkLoggedIn();
+  checkLoggedIn() {
+    if(this.props.wallets.length > 0) {
+      const navigateToAddToken = NavigationActions.navigate({ routeName: 'password' });
+      this.props.navigation.dispatch(navigateToAddToken);
+    } else {
+      const navigateToAddToken = NavigationActions.navigate({ routeName: 'terms' });
+      this.props.navigation.dispatch(navigateToAddToken);
     }
+  }
 
-    checkLoggedIn() {
-
-
-        const routeName = this.props.wallet ? "mainStack" : "terms";
-
-        const resetAction = NavigationActions.reset({
-            index: 0,
-            actions: [
-                NavigationActions.navigate({ routeName: routeName })
-            ]
-        })
-
-        this.props.navigation.dispatch(resetAction);
-    }
-
-    render() {
-      return (
+  render() {
+    return (
         <View />
-      )
-    }
+    );
+  }
 }
 
-const mapStateToProps = ({ newWallet }) => {
-  return { wallet: newWallet.wallet };
+const mapStateToProps = ({ Wallet }) => {
+  const { wallets } = Wallet;
+  return { wallets };
 };
 
-export default connect(mapStateToProps)(Splash)
+export default connect(mapStateToProps, actions)(Splash);

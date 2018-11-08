@@ -1,6 +1,7 @@
 import { StackNavigator, DrawerNavigator, DrawerItems } from 'react-navigation';
 import { View, StyleSheet } from 'react-native';
 import React from 'react';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 import Contacts from '../../screens/main/menu/contacts/index';
 import AddContact from '../../screens/main/menu/contacts/add/AddContact';
 import EditContact from '../../screens/main/menu/contacts/add/EditContact';
@@ -8,13 +9,13 @@ import Portfolio from '../../screens/main/portfolio/index';
 import CoinSend from '../../screens/main/tokens/send/CoinSend';
 import CoinHistory from '../../screens/main/tokens/history/CoinActivity';
 import CoinReceive from '../../screens/main/tokens/receive/CoinReceive';
-import AddToken from '../../screens/main/tokens/add/Tokens';
-import AddCoin from '../../screens/main/tokens/add/Coins'
 import ContactAddresses from '../../screens/main/menu/contacts/SelectedContact';
 import QrCodeScanner from '../../screens/main/qr/QrCodeScanner';
 import BackupPhrase from '../../screens/main/menu/settings/BackupPhrase';
 import TokenFunctionality from '../../screens/main/tokens/Index';
 import AddingTokensOrCoins from '../../screens/main/tokens/add/Index';
+import Contract from '../../screens/main/contracts/Contract';
+import Network from '../../screens/main/menu/settings/Network';
 
 const CustomDrawerContentComponent = props => (
   <View style={styles.customContainer}>
@@ -27,7 +28,6 @@ const CustomDrawerContentComponent = props => (
     </View>
   </View>
 );
-
 
 /**
  * Constant contains all the screens that can be navigated to using the
@@ -51,6 +51,7 @@ const navigator = DrawerNavigator({
       navigationOptions: {
         backgroundColor: '#fafbfe',
         borderBottomWidth: 0,
+        gesturesEnabled: false,
       },
     }),
   },
@@ -58,15 +59,16 @@ const navigator = DrawerNavigator({
   Contacts: {
     screen: StackNavigator({
       contacts: { screen: Contacts },
-      editContact: { screen: EditContact},
+      editContact: { screen: EditContact },
       addContact: { screen: AddContact },
     },
     {
       headerMode: 'none',
     }),
   },
-  Coins: { screen: AddCoin },
-  Tokens: { screen: AddToken },
+  Tokens: { screen: AddingTokensOrCoins },
+  Contracts: { screen: Contract },
+  Networks: { screen: Network },
 }, {
   headerMode: 'none',
   lazy: true,
@@ -79,13 +81,14 @@ export default navigator;
 const styles = StyleSheet.create({
   customContainer: {
     flex: 1,
-    backgroundColor: "white" ,
+    backgroundColor: 'white',
+    marginTop: getStatusBarHeight(),
   },
-  labelText:{
-    fontSize:16,
-    letterSpacing:0.6,
-    fontFamily: "Cairo-Light",
-    color:"black",
-    fontWeight:'200',
+  labelText: {
+    fontSize: 16,
+    letterSpacing: 0.6,
+    fontFamily: 'Cairo-Light',
+    color: 'black',
+    fontWeight: '200',
   },
-})
+});

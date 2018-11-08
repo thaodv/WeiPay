@@ -3,9 +3,7 @@ import { Text, View, StyleSheet, TouchableOpacity, Dimensions, Image, Platform }
 import { connect } from 'react-redux';
 import RF from 'react-native-responsive-fontsize';
 import { addTokenToSetup } from '../../actions/ActionCreator';
-import BoxShadowCard from '../ShadowCards/BoxShadowCard';
-
-const axios = require('axios');
+import BoxShadowCard from '../shadowCards/BoxShadowCard';
 
 /**
  * React Component
@@ -23,6 +21,7 @@ class CoinListItem extends Component {
     this.state = {
       totalTaps: (this.props.coin.selected ? 1 : 0),
       checked: false,
+      tokens: this.props.tokens
     };
   }
 
@@ -34,12 +33,12 @@ class CoinListItem extends Component {
    */
   renderPress(coin) {
     if (this.state.totalTaps == 0) {
-      this.props.addTokenToSetup(coin);
+      this.props.addTokenToSetup(coin, this.props.tokens);
       this.setState({ checked: !(this.state.checked), totalTaps: 1 });
     } else if (this.state.totalTaps == 1) {
       this.setState({ totalTaps: 2 })
-    }else if (this.state.totalTaps == 2) {
-      this.props.addTokenToSetup(coin);
+    } else if (this.state.totalTaps == 2) {
+      this.props.addTokenToSetup(coin, this.props.tokens);
       this.setState({ checked: !(this.state.checked), totalTaps: 0 })
     }
   }
@@ -51,9 +50,9 @@ class CoinListItem extends Component {
   renderStatePicture(coin) {
     if (coin.selected == false) {
       return require('../../assets/images/add2.png')
-    }else if (this.state.totalTaps == 1 && (coin.selected)) {
+    } else if (this.state.totalTaps == 1 && (coin.selected)) {
       return require('../../assets/images/added.png')
-    }else if (this.state.totalTaps == 2 && coin.selected) {
+    } else if (this.state.totalTaps == 2 && coin.selected) {
       return require('../../assets/images/delete.png')
     }
   }
@@ -76,7 +75,6 @@ class CoinListItem extends Component {
    */
   render() {
     const { coin } = this.props;
-
     let statePictureStyle = {
       height: Dimensions.get('window').height * 0.035,
       width: Dimensions.get('window').width * 0.035,
@@ -101,7 +99,7 @@ class CoinListItem extends Component {
                   <View style={styles.imageContainer} >
                     <Image
                       style={styles.img}
-                      source={{ uri: coin.logo.src} }
+                      source={{ uri: coin.logo} }
                     />
                   </View>
                 </View>
@@ -197,6 +195,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
   return {
     tokenList: state.newWallet.tokens,
+    tokens: state.Wallet.tokens,
   };
 };
 

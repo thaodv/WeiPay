@@ -5,16 +5,13 @@ import {
 import { connect } from 'react-redux';
 import RF from 'react-native-responsive-fontsize';
 import { NavigationActions } from 'react-navigation';
-import LinearButton from '../../../components/LinearGradient/LinearButton';
-import { addTokenInfo, updateTokenBalance, resetWalletBalance } from '../../../actions/ActionCreator';
+import LinearButton from '../../../components/linearGradient/LinearButton';
+import { setWalletTokenBalances, fetchCoinData, calculateWalletBalance } from '../../../actions/FetchCoinData';
+import { saveTokenDataForTransaction, saveAllTokenQuantities } from '../../../actions/AppConfig';
+import processAllTokenBalances from '../../../scripts/tokens/tokenBalances'; //here
 import BackWithMenuNav from '../../../components/customPageNavs/BackWithMenuNav';
-import BoxShadowCard from '../../../components/ShadowCards/BoxShadowCard';
-import ERC20ABI from '../../../constants/data/json/ERC20ABI.json';
-import Provider from '../../../constants/Providers';
-import axios from 'axios'
-
-const ethers = require('ethers');
-const utils = ethers.utils;
+import BoxShadowCard from '../../../components/shadowCards/BoxShadowCard';
+import getNetworkProvider from '../../../constants/Providers';
 
 /**
  * Screen is used to display the wallet portfolio of the user, which contains the
@@ -22,20 +19,104 @@ const utils = ethers.utils;
  */
 class Portfolio extends Component {
   state = {
-    data: this.props.newWallet.tokens,
-    refresh: false,
-    balance: 0,
+    provider: null,
+    data: this.props.tokens,
     pricesLoaded: false,
-    currencySymbol: ['USD', 'CAD', 'BTC', 'ETH', 'EUR'],
+    refresh: false,
     currencyIndex: 0,
-    reducerKeys: [
-      this.props.newWallet.walletBalance.usdWalletBalance, 
-      this.props.newWallet.walletBalance.cadWalletBalance, 
-      this.props.newWallet.walletBalance.btcWalletBalance, 
-      this.props.newWallet.walletBalance.ethWalletBalance, 
-      this.props.newWallet.walletBalance.eurWalletBalance 
-    ],
-    check: 0,
+    walletBalance: {},
+    currency: this.props.currencyOptions,
+    apiRequestString: '',
+    tokenBalances: {},
+    tokenAmounts: null,
+    tokenPrices: [],
+    completeTokenObject: null,
+    currentWallet: this.props.hotWallet.wallet,
+    currentWalletName: this.props.wallets[0].name,
+  }
+
+  /**
+   * On initial app set up -> data will be default eth being loaded from default config
+   * on subsequent launches it will pull from whatever tokens you have in the new wallet reducer - this data source will be removed
+   * Based on the tokens in the reducer you will get a concatenated string for the api request that will return a matrix of tokens and their price arrays
+   * fetch coin data then stores this data in the Balance Reducer tokenConversions array (Balance will be renamed to Wallet and newWalletReducer will be removed)
+   * This array will have the following structure -> //  { ETH: {USD: 209.5, CAD: 285.32, ETH: 1, BTC: 0.03264, EUR: 178.06} SUB: {USD: 0.112, CAD: 0.1535, ETH: 0.000534, BTC: 0.00001743, EUR: 0.09506} }
+   * The format tokens function takes our list of tokens and formats them in such a way to achieve 2 goals
+   * 1) The concatenated api request url to get all prices
+   * 2) Generates an array of Token objects that contain a symbol and contract address, ETH will have a null address and this allows us to distibguish which balance method we use.
+   *  - This setup will allow us to pass lists of tokens along with the private key of the current wallet to manage multiple user wallets.
+   * ProcessAllTokenBalances(privateKey, tokenObjectList) takes this data and returns { 'tokenSymbolString' : tokenApiRequestString, 'tokenBalances' : allBalances };
+   * tokenApiRequestString is the concatenated URL string that is dynamically created whenever a user adds or removes a coin.
+   * tokenBalances holds an array of objects -> [ { symbol: 'yourTokenSymbol', amount: 'How many tokens your wallet has' } ... ]
+   * This logic is in scripts/tokenBalances
+   *   - This will allow additional token support to added in a modular way with minimal config changes. (Additional ABI import and object flag)
+   * Once we have all this data, we can invoke calculateWalletBalance(tokenBalances, this.props.Balance.tokenConversions);
+   * This actionCreator will do 2 things
+   *  1) Calculate the overall wallet balance given every token you have with the current api prices with your amount of tokens
+   *  2) It will track all individual tokens a user has and how much their token holding is worth relative to USD, CAD, EUR, BTC, and ETH
+   * The Balance (soon to be Wallet) reducer then updates state -> { ...state, walletBalance: walletBalanceObject, tokenBalances: individualTokens };
+   */
+  async componentDidMount() {
+    const provider = await getNetworkProvider(this.props.network);
+    this.setState({ provider });
+    if (this.props.walletBalance == null) {
+      await this.balanceCalculations();
+    } else {
+      await this.setState({
+        walletBalance: this.props.walletBalance,
+        tokenPrices: this.props.tokenBalances,
+        tokenAmounts: this.props.tokenQuantities,
+      });
+      this.showTokens();
+    }
+  }
+
+  balanceCalculations = async () => {
+    const { tokenSymbolString, tokenBalances } = await this.formatTokens(this.state.data);
+    this.props.saveAllTokenQuantities(tokenBalances);
+    await this.props.fetchCoinData(tokenSymbolString);
+    await this.props.calculateWalletBalance(tokenBalances, this.props.tokenConversions);
+    await this.setState({
+      apiRequestString: tokenSymbolString,
+      walletBalance: this.props.walletBalance,
+      tokenPrices: this.props.tokenBalances,
+      tokenAmounts: tokenBalances,
+    });
+    this.showTokens();
+  }
+  /**
+   * tokens are passed into the function where their symbols and addresses are parsed out and stored in an array,
+   * which is then passed to processAllTokenBalances. The return is the concatenated string of symbols in wallet, and the amount
+   * of each token the user has for a given private key.
+   */
+  formatTokens = async (tokenList) => {
+    let tokenObjectList = [];
+    for (let i = 0; i < tokenList.length; i++) {
+      let tokenObj = {};
+      tokenObj.symbol = tokenList[i].symbol;
+      tokenObj.contractAddress = tokenList[i].address;
+      tokenObj.decimals = tokenList[i].decimals;
+      tokenObjectList.push(tokenObj);
+    }
+    const privateKey =  this.state.currentWallet.privateKey;
+    return { tokenSymbolString, tokenBalances } = await processAllTokenBalances(privateKey, tokenObjectList, this.state.provider);
+  }
+
+  /**
+   * After all price data has loaded, a new array will be created with all token info -> amount of tokens, price matrix of tokens,
+   * and token info. This will be the data source for the flat list.
+   */
+  showTokens = () => {
+    if (Object.prototype.hasOwnProperty.call(this.state.walletBalance, 'USD')) this.setState({ pricesLoaded: true });
+    let cTokenObjectList = [];
+    for(let i = 0; i < this.props.tokens.length; i++) {
+      let cto = {};
+      cto.tokenInfo = this.props.tokens[i];
+      cto.tokenPriceInfo = this.props.tokenBalances[i];
+      cto.tokenAmounts = this.state.tokenAmounts[i];
+      cTokenObjectList.push(cto);
+    }
+    this.setState({ completeTokenObject: cTokenObjectList });
   }
 
   navigate = () => {
@@ -48,80 +129,18 @@ class Portfolio extends Component {
     this.props.navigation.dispatch(navigateToAddToken);
   };
 
-  tokenBalanceLoop = async () => {
-    const tokenLen = this.props.newWallet.tokens.length;
-    this.setState({pricesLoaded: false})
-    this.props.resetWalletBalance();
-    for (let i = 0; i < (tokenLen); i += 1) {      
-      await this.getTokenBalance(i);
-    }
-    await this.setState({ check: this.props.newWallet.walletBalance.usdWalletBalance, refresh: false, pricesLoaded: true })   
-  }
-
-  getTokenBalance = async (tokenIndex) => {
-    const token = this.state.data[tokenIndex];
-    try {
-      const currentWallet = this.props.newWallet.wallet;
-      try {
-        if (token.address === '') {            
-          const balance = await Provider.getBalance(currentWallet.address);
-          const check = String(utils.formatEther(balance));                 
-          await this.getConversions(tokenIndex, token.symbol, check);          
-        } else {                              
-           const contract = new ethers.Contract(token.address, ERC20ABI, Provider);       
-           const tokenBalance = await contract.balanceOf(currentWallet.address);                                         
-           await this.getConversions(tokenIndex, token.symbol, String(tokenBalance));               
-        }
-      } catch (err) {
-        this.props.updateTokenBalance(tokenIndex, 0, 0, 0, 0, 0, 0 );
-        console.log("in error block", err);                 
-        this.setState({ refresh: false });
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  getConversions = async (tokenIndex, symbol, quantity) => { 
-    var usd, eth, btc, cad, eur;  
-    let response = await axios.get(
-      `https://min-api.cryptocompare.com/data/price?fsym=${symbol}&tsyms=USD,CAD,ETH,BTC,EUR`
-    )
-    if(response.data.hasOwnProperty('USD')){     
-      let prices = response.data;         
-      await this.props.updateTokenBalance(
-        tokenIndex, 
-        quantity, 
-        prices.ETH,
-        prices.BTC,
-        prices.USD,
-        prices.CAD,
-        prices.EUR  
-      ); 
-    } else {         
-      await this.props.updateTokenBalance(
-        tokenIndex, 
-        quantity, 
-        0,
-        0,
-        0,
-        0,
-        0  
-      );   
-    }
-  }
-
-  /**
-   * Returns a ListItem component specific to the properties of the token parameter
-   */
   renderRow = (token) => {
-    return (
+    const { tokenInfo, tokenPriceInfo, tokenAmounts } = token;
+
+    if (tokenInfo.selected) {
+      return (
         <TouchableOpacity
           onPress={() => {
-            this.props.addTokenInfo(token);
-            this.props.navigation.navigate("TokenFunctionality")
+            this.props.saveTokenDataForTransaction(tokenAmounts.amount, tokenInfo.symbol, tokenInfo.address);
+            this.props.navigation.navigate('TokenFunctionality');
           }}
           style={styles.listItemParentContainer}
+          key={ `${tokenInfo.address}${tokenInfo.symbol}` }
         >
           <View>
             <BoxShadowCard customStyles={styles.boxShadowContainer}>
@@ -130,17 +149,17 @@ class Portfolio extends Component {
                   <View style={styles.imageContainer} >
                     <Image
                       style={styles.img}
-                      source={ { uri: token.logo.src } }
+                      source={ { uri: tokenInfo.logo } }
                     />
                   </View>
                 </View>
                 <View style={styles.listItemTextComponentContainer}>
                   <View style={ styles.listItemTextComponent }>
                     <View style={styles.mainTitleContainer}>
-                      <Text style={styles.mainTitleText}> {token.symbol} </Text>
+                      <Text style={styles.mainTitleText}> {tokenInfo.symbol} </Text>
                     </View>
                     <View style={styles.subtitleContainer}>
-                      <Text style={styles.subTitleText}> {token.name} </Text>
+                      <Text style={styles.subTitleText}> {tokenInfo.name} </Text>
                     </View>
                   </View>
                 </View>
@@ -148,12 +167,12 @@ class Portfolio extends Component {
                   <View style={ styles.listItemValueComponent }>
                     <Text style={styles.listItemCryptoValue}>
                       {
-                        token.quantity
+                        tokenAmounts == null ? 0 : tokenAmounts.amount
                       }
                     </Text>
                     <Text style={styles.listItemFiatValue}>
                       {
-                        token.cadBalance
+                        tokenAmounts == null ? 'NA' : (tokenPriceInfo)[this.props.currencyOptions[this.state.currencyIndex]]
                       }
                     </Text>
                   </View>
@@ -162,23 +181,22 @@ class Portfolio extends Component {
             </BoxShadowCard>
           </View>
         </TouchableOpacity>
-    );
+      );
+    }
+    return null;
   }
 
-  handleListRefresh = () => {
-    this.setState({ refresh: true, currencyIndex: 0 },
-      () => {
-        this.tokenBalanceLoop();
-      });
+  handleListRefresh = async () => {
+    await this.balanceCalculations();
   }
 
-  handleCurrencyTouch = () => {    
-    let currentIndex = this.state.currencyIndex;    
-    if(currentIndex == 4) {
-      this.setState({currencyIndex: 0})        
+  handleCurrencyTouch = async () => {
+    let currentIndex = this.state.currencyIndex;
+    if (currentIndex === 4) {
+      await this.setState({ currencyIndex: 0 });
     } else {
       let index = currentIndex += 1;
-      this.setState({currencyIndex: index})    
+      await this.setState({ currencyIndex: index });
     }
   }
 
@@ -186,7 +204,8 @@ class Portfolio extends Component {
    * Returns a component that displays all the tokens that the user had selected.
    * The component also provides the option to add/delete tokens
    */
-  render() {  
+
+  render() {
     return (
       <SafeAreaView style={styles.safeAreaView}>
         <View style={styles.mainContainer} >
@@ -197,40 +216,59 @@ class Portfolio extends Component {
               navigation={this.props.navigation}
             />
           </View>
-          <Text style={styles.textHeader}>Holdings</Text>
+          <Text style={styles.textHeader}>
+            {
+              this.props.debugMode
+                ? this.props.testWalletName
+                : this.state.currentWalletName
+            }
+          </Text>
           <View style={styles.touchableCurrencyContainer}>
             <TouchableOpacity onPress={this.handleCurrencyTouch}>
-              <View style={styles.accountValueHeader}>          
+              <View style={styles.accountValueHeader}>
                   <Text style={styles.headerValue}>
-                    {                   
-                      this.state.check                
+                    {
+                      this.state.pricesLoaded
+                        ? (this.state.walletBalance)[this.props.currencyOptions[this.state.currencyIndex]]
+                        : 'Balance Loading ...'
                     }
                   </Text>
-                  <Text style={styles.headerValueCurrency}> 
+                  <Text style={styles.headerValueCurrency}>
                   {
-                    this.state.currencySymbol[this.state.currencyIndex]
+                    this.state.pricesLoaded
+                      ? ' ' + this.state.currency[this.state.currencyIndex] + " (" + this.props.network + ")"
+                      : null
                   }
-                  </Text>                
+                  </Text>
               </View>
             </TouchableOpacity>
           </View>
           <View style={styles.scrollViewContainer}>
-            <FlatList
-              data={this.state.data}
-              showsVerticalScrollIndicator={false}
-              renderItem={({ item }) => { return this.renderRow(item); }}
-              keyExtractor={(item) => { return String(item.id); }}
-              refreshing={this.state.refresh}
-              onRefresh={this.handleListRefresh}
-              extraData={this.props}
-            />
+            {
+              this.state.completeTokenObject == null
+                ? null
+                :
+                <FlatList
+                  data={this.state.completeTokenObject}
+                  showsVerticalScrollIndicator={false}
+                  renderItem= {({ item }) => { return this.renderRow(item); }}
+                  keyExtractor= {(item) => {
+                    return `${item.tokenInfo.address}${item.tokenInfo.name}`
+                  }}
+                  refreshing={this.state.refresh}
+                  onRefresh={this.handleListRefresh}
+                  extraData={this.props}
+                />
+            }
           </View>
           <View style={styles.btnContainer}>
             <LinearButton
               onClickFunction={this.navigate}
               buttonText="Add Token or Coin"
               customStyles={styles.button}
+              buttonStateEnabled={!this.state.pricesLoaded}
             />
+
             <View style={styles.footerGrandparentContainer}>
               <View style={styles.footerParentContainer} >
                 <Text style={styles.textFooter} >Powered by ChainSafe </Text>
@@ -243,9 +281,6 @@ class Portfolio extends Component {
   }
 }
 
-/**
- * Styles used in the "Portfolio" screen
- */
 const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
@@ -365,7 +400,7 @@ const styles = StyleSheet.create({
   },
   headerValue: {
     fontFamily: 'WorkSans-Medium',
-    marginLeft: '9%',
+    marginLeft: '10%',
     color: '#27c997',
     fontSize: RF(3),
   },
@@ -406,14 +441,40 @@ const styles = StyleSheet.create({
   },
 });
 
-/**
- * Method is used  to reterive the newWallet object
- * from the global state variable.
- * Returns an object containing that reterived object
- * @param {Object} param0
- */
-function mapStateToProps({ newWallet }) {
-  return { newWallet };
+function mapStateToProps({ Wallet, Debug, HotWallet }) {
+  const { hotWallet } = HotWallet;
+  const {
+    currencyOptions,
+    tokens,
+    wallets,
+    tokenConversions,
+    tokenBalances,
+    walletBalance,
+    tokenQuantities,
+    network,
+  } = Wallet;
+  const {
+    debugMode, testWalletName,
+  } = Debug;
+  return {
+    hotWallet,
+    currencyOptions,
+    tokens,
+    debugMode,
+    testWalletName,
+    wallets,
+    tokenConversions,
+    walletBalance,
+    tokenBalances,
+    tokenQuantities,
+    network,
+  };
 }
 
-export default connect(mapStateToProps, { addTokenInfo, updateTokenBalance, resetWalletBalance })(Portfolio);
+export default connect(mapStateToProps, {
+  setWalletTokenBalances,
+  fetchCoinData,
+  calculateWalletBalance,
+  saveTokenDataForTransaction,
+  saveAllTokenQuantities,
+})(Portfolio);

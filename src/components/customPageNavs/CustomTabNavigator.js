@@ -4,8 +4,6 @@ import {
 } from 'react-native';
 import RF from 'react-native-responsive-fontsize';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
-import { connect } from 'react-redux';
-
 
 /**
  * Custom Tab Navigator Component
@@ -15,18 +13,29 @@ import { connect } from 'react-redux';
  *  *** SPECIFY THE FOLLOWING PROP WHEN USING THIS COMPONENT***
  *    - tabs ( Integer component, represents the total amount of tabs being inserted )
  */
-
 export default class Tabs extends Component {
     state = {
-      activeTab: 0,
+      activeTab: this.getActiveTab(),
       totalTabs: (this.props.tabs - 1),
+    }
+
+    getActiveTab() {
+      if (this.props.activeTab != undefined) {
+        const tab = this.props.activeTab - 1; 
+        if (this.props.activeTab == 0) {
+          return 0;
+        } else {
+          return tab;
+        }
+      } else {
+        return 0;
+      }
     }
 
     onSwipe(gestureName) {
       const { SWIPE_LEFT, SWIPE_RIGHT } = swipeDirections;
       switch (gestureName) {
         case SWIPE_LEFT:
-
           if (this.state.activeTab < this.state.totalTabs) {
             this.setState({ activeTab: (this.state.activeTab + 1) });
           }
@@ -46,6 +55,7 @@ export default class Tabs extends Component {
         velocityThreshold: 0.3,
         directionalOffsetThreshold: 80,
       };
+
       return (
         <GestureRecognizer
           onSwipe={(direction, state) => { return this.onSwipe(direction, state); }}

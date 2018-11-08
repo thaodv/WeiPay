@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, FlatList, SafeAreaView } from 'react-native';
-import { CardSection } from '../../../../components/common/CardSection';
 import CoinSendTabNavigator from '../../../../components/customPageNavs/CoinSendTabNavigator';
 import BackWithMenuNav from '../../../../components/customPageNavs/BackWithMenuNav';
 import { connect } from 'react-redux';
@@ -11,11 +10,6 @@ const ethers = require('ethers');
 const moment = require('moment');
 const utils = ethers.utils;
 
-/**
- * React Component
- * Contains a local history of all the transactions that have been occured
- * using the current wallet address
- */
 class CoinActivity extends Component {
   constructor(props) {
     super(props);
@@ -23,22 +17,29 @@ class CoinActivity extends Component {
       balance: '',
       loaded: false,
       data: [],
-      address: this.props.wallet.address,
+      address: this.props.wallet.pubKey,
     };
   }
 
   componentDidMount() {
+    // console.log(this.state.address);
     this.getData(this.state.address);
   }
 
+  /*
+  http://api-ropsten.etherscan.io/api?module=account&action=txlist&address=0xFc02F8B4309fFF99F3C0BA3e8Bbb7399572EEf51&startblock=0&endblock=99999999&sort=asc&apikey=YJ1TRXBKAH9QZWINVFT83JMFBQI15X7UPR
+
+  */
+
   getData = async (address) => {
-    const url = `https://api.etherscan.io/api?module=account&action=txlist&address=${  address  }&page=1&offset=10&sort=asc&apikey=YJ1TRXBKAH9QZWINVFT83JMFBQI15X7UPR`;
+    const url = `http://api-ropsten.etherscan.io/api?module=account&action=txlist&address=${  address  }&sort=asc&apikey=YJ1TRXBKAH9QZWINVFT83JMFBQI15X7UPR`;
     axios.get(url).then((response) => {
       this.parseData(response.data.result);
     });
   }
 
   parseData = (json) => {
+    
     const transactions = [];
     for (let i = 0; i < json.length; i++) {
       const transObj = {};
@@ -104,9 +105,6 @@ class CoinActivity extends Component {
   }
 }
 
-/**
- * Style
- */
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1, 
@@ -206,9 +204,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = ({HotWallet}) => {
   return {
-    wallet: state.newWallet.wallet,  
+    wallet: HotWallet.hotWallet,
   };
 };
 

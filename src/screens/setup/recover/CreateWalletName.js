@@ -1,53 +1,37 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, Dimensions, TouchableWithoutFeedback, Keyboard, Platform, SafeAreaView } from 'react-native';
+import {
+  View, StyleSheet, Text, Dimensions, TouchableWithoutFeedback, Keyboard, SafeAreaView,
+} from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
-import { FormInput, Card } from 'react-native-elements';
-import { newWalletCreation, newWalletNameEntry } from '../../../actions/ActionCreator';
-import LinearButton from '../../../components/LinearGradient/LinearButton';
+import { FormInput } from 'react-native-elements';
+import RF from 'react-native-responsive-fontsize';
+import { setTempWalletName } from '../../../actions/AppConfig';
+import LinearButton from '../../../components/linearGradient/LinearButton';
 import BackWithMenuNav from '../../../components/customPageNavs/BackWithMenuNav';
-import BoxShadowCard from '../../../components/ShadowCards/BoxShadowCard';
-import RF from "react-native-responsive-fontsize"
+import BoxShadowCard from '../../../components/shadowCards/BoxShadowCard';
+
 
 /**
  * Initial setup screen used to allow the user to give their wallet a name after
  * the wallet has been recovered
  */
 class CreateWalletName extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      buttonDisabled: true,
-    };
-  }
-
     /**
      * Method is used to navigate back to the recoverWallet screen.
      */
     navigate = () => {
-      const navigateToPassphrase = NavigationActions.navigate({ routeName: 'recoverWallet' });
+      const navigateToPassphrase = NavigationActions.navigate({ 
+        routeName: 'password',
+        params: { 'nextScreenToNavigate' : 'mainStack', 'wallet': this.props.navigation.state.params.wallet },
+      });
       this.props.navigation.dispatch(navigateToPassphrase);
     };
 
-    /**
-     * Executes the action "newWalletNameEntry" with "name" as the parameter
-     * in order to update the name of the wallet in the global state variable
-     * @param {String} name
-     */
     getWalletName(name) {
-      this.props.newWalletNameEntry(name);
-      if (name !== '') {
-        this.setState({ buttonDisabled: false });
-      } else {
-        this.setState({ buttonDisabled: true });
-      }
+      this.props.setTempWalletName(name);
     }
 
-    /**
-     * Main Component
-     * Returns the form required for the user to set the name of their wallet
-     */
     render() {     
       return (
         <SafeAreaView style={styles.safeAreaView}>
@@ -83,7 +67,7 @@ class CreateWalletName extends Component {
                         onClickFunction={ this.navigate }
                         buttonText= 'Next'
                         customStyles={styles.button}
-                        buttonStateEnabled={ this.props.debugMode ? false : this.state.buttonDisabled}
+                        buttonStateEnabled= { this.props.testWalletName === null && this.props.tempWalletName === null }
                     />
                     <View style={styles.footerGrandparentContainer}>
                         <View style={styles.footerParentContainer} >
@@ -185,15 +169,10 @@ const styles = StyleSheet.create({
   },
 });
 
-/**
- * This method is not being used here
- * @param {Object} param
- */
-const mapStateToProps = ({ newWallet }) => {
-  const { walletName } = newWallet;
-  const { debugMode } = newWallet;
-
-  return { walletName, debugMode };
+const mapStateToProps = ({ Debug, Wallet }) => {
+  const { debugMode, testWalletName } = Debug;
+  const { wallets, tempWalletName } = Wallet;
+  return { debugMode, wallets, tempWalletName, testWalletName };
 };
 
-export default connect(mapStateToProps, { newWalletNameEntry, newWalletCreation })(CreateWalletName);
+export default connect(mapStateToProps, { setTempWalletName })(CreateWalletName);
