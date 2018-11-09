@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Dimensions } from 'react-native';
+import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import TabNavigator from '../../../../components/customPageNavs/CustomTabNavigator';
 import BackWithMenuNav from '../../../../components/customPageNavs/BackWithMenuNav';
@@ -33,6 +34,11 @@ class Index extends Component {
       }
       this.state = {
         setActiveTab: active,
+        index: 0,
+        routes: [
+          { key: 'first', title: 'First' },
+          { key: 'second', title: 'Second' },
+        ],
       }
     }
   }
@@ -46,22 +52,16 @@ class Index extends Component {
               navigation={this.props.navigation}
               backPage={'mainStack'}
           />
-          <TabNavigator tabs={3} activeTab={ this.state.setActiveTab }>
-              {/* First tab */}
-              <View title="Tokens" style={styles.content}>
-                <Coins navigation={this.props.navigation} />
-              </View>
-              {/* Second tab */}
-              <View title="Search" style={styles.content}>
-                  <Tokens navigation={this.props.navigation} />
-              </View>
-              {/* Third tab */}
-              <View title="New Token" style={styles.content}>
-                  <NewToken
-                    navigation={this.props.navigation}
-                  />
-              </View>
-          </TabNavigator>
+          
+          <TabView
+            navigationState={this.state}
+            renderScene={SceneMap({
+              first: Coins,
+              second: Tokens,
+            })}
+            onIndexChange={index => this.setState({ index })}
+            initialLayout={{ width: Dimensions.get('window').width }}
+          />
       </View>
     );
   }
@@ -81,3 +81,21 @@ const styles = StyleSheet.create({
 });
 
 export default Index;
+
+
+// <TabNavigator tabs={3} activeTab={ this.state.setActiveTab }>
+//               {/* First tab */}
+//               <View title="Tokens" style={styles.content}>
+//                 <Coins navigation={this.props.navigation} />
+//               </View>
+//               {/* Second tab */}
+//               <View title="Search" style={styles.content}>
+//                   <Tokens navigation={this.props.navigation} />
+//               </View>
+//               {/* Third tab */}
+//               <View title="New Token" style={styles.content}>
+//                   <NewToken
+//                     navigation={this.props.navigation}
+//                   />
+//               </View>
+//           </TabNavigator>
