@@ -40,8 +40,17 @@ const utils = ethers.utils;
 class CoinSend extends Component {
   constructor(props) {
     super(props);
+
+    console.log(this.props.invoker);
+    console.log(this.props.QrData);
+    var addr  = this.props.gloablPublicAddress;
+    if (this.props.invoker == "TokenFunctionality") {
+      addr = this.props.QrData;
+    }
+    
+    
     this.state = {
-      toAddress: this.props.gloablPublicAddress,
+      toAddress: addr,
       value: null,
       inputValue: null,
       txnFee: null,
@@ -56,7 +65,7 @@ class CoinSend extends Component {
     this.props.qrScannerCoinInvoker(this.props.activeTokenData.symbol);
     const navigateToQRScanner = NavigationActions.navigate({
       routeName: 'QCodeScanner',
-      params: { invoker: 'CoinSend' },
+      params: { invoker: 'TokenFunctionality' },
     });
     this.props.navigation.dispatch(navigateToQRScanner);
   };
@@ -362,10 +371,12 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = ({
-  Wallet, HotWallet, newWallet, contacts,
+  Wallet, HotWallet, newWallet, contacts, QrScanner,
 }) => {
   const { gloablPublicAddress, activeTokenData, network } = Wallet;
   const { wallet } = HotWallet.hotWallet;
+  //const { invoker } = QrScanner.invoker;
+  
   return {
     wallet,
     gloablPublicAddress,
@@ -373,6 +384,9 @@ const mapStateToProps = ({
     txnFee: newWallet.txnFee,
     contactAddress: contacts.contactDataforCoinSend,
     network,
+    invoker: QrScanner.invoker,
+    QrData: newWallet.QrData,
+    
   };
 };
 

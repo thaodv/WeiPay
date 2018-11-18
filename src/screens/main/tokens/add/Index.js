@@ -13,28 +13,37 @@ class Index extends Component {
     super(props);
     var active = 0;
     let refreshRoute = null;
-    try {
-      refreshRoute = this.props.navigation.state.params.tab;
-      console.log({refreshRoute});
-    } catch (err) {
-      console.log({err});
-    }
 
-    if (refreshRoute !== null) {
-      this.state = {
-        setActiveTab: refreshRoute,
-      }
-    } else {
-      console.log('do we hit else?');
-      try {
-        active = this.props.navigation.state.params.activeTab;
-      } catch (error) {
-        active = 0;
-      }
-      this.state = {
-        setActiveTab: active,
-      }
+    try {
+      active = this.props.navigation.state.params.activeTab;
+    } catch (error) {
+      active = 0;
     }
+    this.state = {
+      setActiveTab: active,
+    }
+    // try {
+    //   refreshRoute = this.props.navigation.state.params.tab;
+    //   console.log({refreshRoute});
+    // } catch (err) {
+    //   console.log({err});
+    // }
+
+    // if (refreshRoute !== null) {
+    //   this.state = {
+    //     setActiveTab: refreshRoute,
+    //   }
+    // } else {
+    //   console.log('do we hit else?');
+    //   try {
+    //     active = this.props.navigation.state.params.activeTab;
+    //   } catch (error) {
+    //     active = 0;
+    //   }
+    //   this.state = {
+    //     setActiveTab: active,
+    //   }
+    // }
   }
 
   render() {

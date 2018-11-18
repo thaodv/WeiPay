@@ -14,10 +14,20 @@ import BoxShadowCard from '../../../../components/shadowCards/BoxShadowCard';
 import BackWithMenuNav from '../../../../components/customPageNavs/BackWithMenuNav';
 
 class NewToken extends Component {
-  state = {
-    tokenName: '',
-    tokenAddress: '',
+  constructor(props) {
+    super(props);
+    var tokenAdd = "";
+    if (this.props.invoker == "AddTokenFunctionality") {
+      tokenAdd = this.props.newTokenAddress;
+    }
+    //this.props.qrScannerInvoker('');
+
+    this.state = {
+      tokenName: '',
+      tokenAddress: tokenAdd,
+    }  
   }
+  
 
   complete = () => {
     if (this.state.tokenAddress !== '' && this.state.tokenName !== '') {
@@ -239,11 +249,12 @@ const styles = StyleSheet.create({
 
 });
 
-const mapStateToProps = ({ newWallet, Wallet }) => {
+const mapStateToProps = ({ newWallet, Wallet, QrScanner }) => {
   return {
     newTokenAddress: newWallet.newTokenAddress,
     newTokenName: newWallet.newTokenName,
     tokens: Wallet.tokens,
+    invoker: QrScanner.invoker,
     QrCodeData: newWallet.QrData,
   };
 };

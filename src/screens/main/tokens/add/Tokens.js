@@ -44,10 +44,14 @@ class Coins extends Component {
 
   refresh = () => {
     const refreshPage = NavigationActions.navigate({
-      routeName: 'searchToken',
-      params: { tab: 1 },
+      routeName: 'AddTokenFunctionality',
+      params: { tab: 1, activeTab: 1 },
     });
     this.props.navigation.dispatch(refreshPage);
+  }
+
+  handleBackPress = () => {
+    this.setState({searchedTokenSym: "", tokenLoaded: false});
   }
 
   handleChangeText(input) {
@@ -108,10 +112,10 @@ class Coins extends Component {
               padding={5}
               returnKeyType={'search'}
               onClose={ ()=> {
-                this.refresh();
+                this.handleBackPress();
               }}
               onBackPress= { () => {
-                this.refresh();
+                this.handleBackPress();
               }}
             />
             {
