@@ -40,17 +40,9 @@ const utils = ethers.utils;
 class CoinSend extends Component {
   constructor(props) {
     super(props);
-
-    console.log(this.props.invoker);
-    console.log(this.props.QrData);
-    var addr  = this.props.gloablPublicAddress;
-    if (this.props.invoker == "TokenFunctionality") {
-      addr = this.props.QrData;
-    }
-    
     
     this.state = {
-      toAddress: addr,
+      toAddress: this.props.gloablPublicAddress,
       value: null,
       inputValue: null,
       txnFee: null,

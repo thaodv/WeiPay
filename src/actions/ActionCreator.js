@@ -266,3 +266,9 @@ export function addTokenFromList(tokenname, tokenSym, tokenAdd) {
     dispatch({ type: actionTypes.ADD_TOKEN_FROM_LIST, payload: loads });
   };
 }
+
+export function setGlobalAddress(address) {
+  return (dispatch) => {
+    dispatch({ type: actionTypes.SET_GLOBAL_PUBLIC_ADDRESS, payload: address });
+  };
+}

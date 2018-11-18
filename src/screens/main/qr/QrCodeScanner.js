@@ -32,6 +32,8 @@ class QrCodeScanner extends Component {
      */
   constructor(props) {
     super(props);
+    console.log({invoker: this.props.invoker});
+    
     this.state = {
       qrcode: '',
       invoker: this.props.invoker,
@@ -43,6 +45,8 @@ class QrCodeScanner extends Component {
   }
 
     navigate = () => {
+      console.log(this.props.invoker);
+      
       const navigateToCreateOrRestore = NavigationActions.navigate({
         routeName: this.state.invoker,
         params: { activeTab: this.state.activeTab }
@@ -59,8 +63,8 @@ class QrCodeScanner extends Component {
     onBarCodeRead = (e) => {
       this.setState({ qrcode: e.data, scanned: !this.state.scanned });
       if (this.state.invoker === 'TokenFunctionality') { // Coin Send page
-        this.props.getQRCodeData(e.data);
-        // this.props.setGlobalAddress(e.data);
+        // this.props.getQRCodeData(e.data);
+        this.props.setGlobalAddress(e.data);
           this.setState({activeTab: 1});
       } else if (this.state.invoker === 'AddTokenFunctionality') {
         this.props.updateNewTokenAddress(e.data);
@@ -72,8 +76,7 @@ class QrCodeScanner extends Component {
         this.props.updateSavedContactInputs(contactInputs);
         this.setState({activeTab: 1});
       }
-      console.log(e);
-
+    
       this.navigate();
     };
 
@@ -93,10 +96,6 @@ class QrCodeScanner extends Component {
                   aspect={Camera.constants.Aspect.fill}
                   showMarker={true}>
                 <View style={styles.btnContainer}>
-                  <LinearButton
-                    onClickFunction={this.navigate}
-                    buttonText='Next'
-                    customStyles={styles.button} />
                   <View style={styles.footerGrandparentContainer}>
                       <View style={styles.footerParentContainer} >
                           <Text style={styles.textFooter} >Powered by ChainSafe </Text>
