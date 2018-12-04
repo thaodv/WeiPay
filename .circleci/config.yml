@@ -39,7 +39,9 @@ jobs:
     steps:
       - checkout:
           path: ~/weipay
-
+      - run:
+          name: Install NPM packages
+          command: npm i
       - run:
           name: Create a main.jsbundle
           command: node ./node_modules/react-native-cli/index.js bundle --dev false --platform ios --entry-file ./index.ios.js --bundle-output ./ios/main.jsbundle
