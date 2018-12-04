@@ -49,10 +49,9 @@ class CoinSend extends Component {
     };
   }
 
-  // componentDidMount() {
-  //   console.log(this.props.);
-    
-  // }
+  componentDidMount() {
+    console.log('hey');
+  }
 
   navigate = () => {
     this.props.setQrInvoker("TokenFunctionality");
@@ -138,6 +137,7 @@ class CoinSend extends Component {
       const provider = await getNetworkProvider(this.props.network);
       let txResponse;
       if (isEtherTX) {
+        console.log('trigger ether trans');
         txResponse = await executeEtherTransaction(
           provider,
           this.state.toAddress,
@@ -145,6 +145,7 @@ class CoinSend extends Component {
           this.state.value,
         );
       } else {
+        console.log('trigger erc20');
         txResponse = await executeERC20Transaction(
           provider,
           this.state.toAddress,
