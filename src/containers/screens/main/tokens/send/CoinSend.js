@@ -10,8 +10,10 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
   Keyboard,
+  Linking,
 } from 'react-native';
 import { connect } from 'react-redux';
+import Hyperlink from 'react-native-hyperlink'
 import { FormInput } from 'react-native-elements';
 import { NavigationActions } from 'react-navigation';
 import RF from 'react-native-responsive-fontsize';
@@ -25,6 +27,7 @@ import getNetworkProvider from '../../../../../constants/Providers';
 import MaliciousAddresses from '../../../../../constants/data/json/addresses_darklist.json';
 import executeEtherTransaction from '../../../../../scripts/tokens/transactions/transactionsEther';
 import executeERC20Transaction from '../../../../../scripts/tokens/transactions/transactionsERC20';
+import getEtherscanLink from '../../../../../scripts/tokens/transactions/getEtherscanLink';
 
 const ethers = require('ethers');
 const img = require('../../../../../assets/icons/barcode.png');
@@ -42,8 +45,14 @@ class CoinSend extends Component {
       maliciousComment: '',
       validAddress: new RegExp('0x[0-9a-fA-F]{40}'),
       valid: false,
+      etherscanLink: null,
     };
   }
+
+  // componentDidMount() {
+  //   console.log(this.props.);
+    
+  // }
 
   navigate = () => {
     this.props.setQrInvoker("TokenFunctionality");
@@ -53,6 +62,7 @@ class CoinSend extends Component {
     });
     this.props.navigation.dispatch(navigateToQRScanner);
   };
+
 
   renderAddress(addressInput) {
     const trimmed = addressInput.trim();
@@ -144,8 +154,11 @@ class CoinSend extends Component {
           this.props.activeTokenData.decimals,
         );
       }
+      console.log({txResponse});
+      
       if (Object.prototype.hasOwnProperty.call(txResponse, 'hash')) {
-        Toast.show('Success, check etherscan', Toast.LONG);
+        const link = getEtherscanLink(this.props.network, txResponse.hash);
+        this.setState({ etherscanLink: link });
         this.resetFields();
       }
     } else {
@@ -155,7 +168,7 @@ class CoinSend extends Component {
 
   render() {
     const {
-      valid, value, maliciousComment, inputValue, toAddress,
+      valid, value, maliciousComment, inputValue, toAddress, etherscanLink,
     } = this.state;
     return (
       <SafeAreaView style={styles.safeAreaView}>
@@ -188,7 +201,8 @@ class CoinSend extends Component {
                         onChangeText={this.renderAddress.bind(this)}
                         ref={(ref) => { return this.inputAddress = ref; }}
                         inputStyle={[styles.formAddress, valid ? styles.colorValid : styles.colorError] }
-                        value={toAddress}
+                        // value={toAddress}
+                        value='0xb9a7d8BcFa271733a057352cA743a79eC4714823'
                         selectionColor={'#12c1a2'}
                       />
                     </View>
@@ -212,23 +226,40 @@ class CoinSend extends Component {
               </View>
             </View>
             <View style={styles.btnContainer}>
-              <View style={styles.btnRow}>
-                <View style={styles.btnFlex}>
-                  <ClearButton
-                    onClickFunction={this.resetFields}
-                    buttonText="Reset"
-                    customStyles={styles.btnReset}
-                  />
-                </View>
-                <View style={styles.btnFlex}>
-                  <LinearButton
-                    onClickFunction={this.processTX}
-                    buttonText="Send"
-                    customStyles={styles.btnSend}
-                    buttonStateEnabled={!valid || !value}
-                  />
-                </View>
+            {
+              etherscanLink === null
+              ? <View style={styles.btnRow}>
+              <View style={styles.btnFlex}>
+                <ClearButton
+                  onClickFunction={this.resetFields}
+                  buttonText="Reset"
+                  customStyles={styles.btnReset}
+                />
               </View>
+              <View style={styles.btnFlex}>
+                <LinearButton
+                  onClickFunction={this.processTX}
+                  buttonText="Send"
+                  customStyles={styles.btnSend}
+                  buttonStateEnabled={!valid || !value}
+                />
+              </View>
+            </View>
+            : <View style={{ backgroundColor: '#12c1a2', justifyContent: 'center', alignItems:'stretch' }}>
+              <BoxShadowCard style={{flex:0.9 }}>
+                <TouchableOpacity
+                  style={{ flex: 0.9, backgroundColor: 'white', justifyContent: 'center', alignItems:'center' }}
+                  onPress={() => Linking.openURL(etherscanLink).catch(err => console.error('An error occurred', err)) }>  
+                  <Text style={{color: '#12c1a2'}}> Show Etherscan TX </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{ flex: 0.9, backgroundColor: 'white', justifyContent: 'center', alignItems:'center' }}
+                  onPress={() => this.setState({ etherscanLink: null })}>
+                  <Text style={{color: '#12c1a2'}}> Dismiss Alert </Text>
+                </TouchableOpacity>
+                </BoxShadowCard>
+              </View>
+            }              
             </View>
           </View>
         </TouchableWithoutFeedback>
