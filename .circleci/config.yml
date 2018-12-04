@@ -2,6 +2,7 @@ version: 2
 jobs:
   android:
     working_directory: ~/weipay
+
     docker:
         - image: circleci/android:api-28-node8-alpha
 
@@ -26,6 +27,26 @@ jobs:
           root: ~/weipay
           paths:
             - node_modules
+  ios:
+    macos:
+      xcode: "9.0"
+
+    working_directory: ~/weipay
+    environment:
+      FL_OUTPUT_DIR: ~/weipay/output
+    shell: /bin/bash --login -o pipefail
+
+    steps:
+      - checkout:
+          path: ~/weipay
+
+      - run:
+          name: Create a main.jsbundle
+          command: node ./node_modules/react-native-cli/index.js bundle --dev false --platform ios --entry-file ./index.ios.js --bundle-output ./ios/main.jsbundle
+      - run: gem install fastlane -NV
+      - run:
+          name: Build and Signing
+          command: fastlane ios beta
 
 workflows:
   version: 2
@@ -36,3 +57,8 @@ workflows:
             branches:
               only:
                 - staging
+      - ios:
+          filters:
+            branches:
+              only:
+                - priom/circle-ios
