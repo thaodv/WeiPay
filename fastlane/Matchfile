@@ -1,9 +1,6 @@
-git_url("git@github.com:ChainSafe/wei-pay-certs.git")
+git_url(ENV['IOS_CERTIFICATE_URL'])
 
 type("appstore") # The default type, can be: appstore, adhoc, enterprise or development
 
 app_identifier("io.chainsafe.weipay")
-username("superadmin@chainsafe.io") # Your Apple Developer Portal username
-
-# For all available options run `fastlane match --help`
-# Remove the # in the beginning of the line to enable the other options
+username(ENV['CHAINSAFE_ADMIN_EMAIL']) # Your Apple Developer Portal username
