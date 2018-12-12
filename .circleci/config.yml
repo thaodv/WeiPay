@@ -44,9 +44,9 @@ jobs:
           name: Install NPM packages
           command: npm i
       - run: brew cask install fastlane
-      - run:
-          name: Build and Signing
-          command: fastlane ios beta
+      # - run:
+      #     name: Build and Signing
+      #     command: fastlane ios beta
 
 workflows:
   version: 2
