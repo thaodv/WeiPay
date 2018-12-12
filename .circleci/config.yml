@@ -28,22 +28,22 @@ jobs:
           paths:
             - node_modules
   
-  ios:
-    macos:
-      xcode: "9.4.1"
+  # ios:
+  #   macos:
+  #     xcode: "9.4.1"
 
-    working_directory: ~/weipay
-    environment:
-      FL_OUTPUT_DIR: ~/weipay/output
-    shell: /bin/bash --login -o pipefail
+  #   working_directory: ~/weipay
+  #   environment:
+  #     FL_OUTPUT_DIR: ~/weipay/output
+  #   shell: /bin/bash --login -o pipefail
 
-    steps:
-      - checkout:
-          path: ~/weipay
-      - run:
-          name: Install NPM packages
-          command: npm i
-      - run: brew cask install fastlane
+  #   steps:
+  #     - checkout:
+  #         path: ~/weipay
+  #     - run:
+  #         name: Install NPM packages
+  #         command: npm i
+  #     - run: brew cask install fastlane
       # - run:
       #     name: Build and Signing
       #     command: fastlane ios beta
@@ -57,8 +57,8 @@ workflows:
             branches:
               only:
                 - staging
-      - ios:
-          filters:
-            branches:
-              only:
-                - priom/circle-ios
+      # - ios:
+      #     filters:
+      #       branches:
+      #         only:
+      #           - priom/circle-ios
